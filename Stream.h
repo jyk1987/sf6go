@@ -4,6 +4,8 @@
 #include "CStream.h"
 #include <cstring>
 #include <cstdio>
+#include <exception>
+#include <string>
 
 #ifndef __SEETA_NOEXCEPT
 #if __cplusplus >= 201103L
@@ -13,7 +15,8 @@
 #endif
 #endif
 
-namespace seeta {
+namespace seeta
+{
 
     class FileNotAccess : public std::exception
     {
@@ -22,14 +25,15 @@ namespace seeta {
         using supper = std::exception;
 
         FileNotAccess(const std::string &filename)
-            : m_filename(filename)
-            , m_msg("Can not access \"" + filename + "\"")
-        {}
+            : m_filename(filename), m_msg("Can not access \"" + filename + "\"")
+        {
+        }
         const char *what() const __SEETA_NOEXCEPT override
         {
             return m_msg.c_str();
         }
         const std::string &filename() const { return m_filename; }
+
     private:
         std::string m_filename;
         std::string m_msg;
@@ -59,11 +63,13 @@ namespace seeta {
 
         CStreamWriter(SeetaStreamWrite *writer, void *obj)
             : m_writer(writer), m_obj(obj)
-        {}
+        {
+        }
 
         size_t write(const char *data, size_t length) override
         {
-            if (!m_writer) return 0;
+            if (!m_writer)
+                return 0;
             return m_writer(m_obj, data, length);
         }
 
@@ -80,13 +86,16 @@ namespace seeta {
 
         CStreamReader(SeetaStreamRead *reader, void *obj)
             : m_reader(reader), m_obj(obj)
-        {}
+        {
+        }
 
         size_t read(char *data, size_t length) override
         {
-            if (!m_reader) return 0;
+            if (!m_reader)
+                return 0;
             return m_reader(m_obj, data, length);
         }
+
     private:
         SeetaStreamRead *m_reader = nullptr;
         void *m_obj = nullptr;
@@ -99,9 +108,9 @@ namespace seeta {
 
         enum Mode
         {
-            Input   = 0x1,
-            Output  = 0x1 << 1,
-            Binary  = 0x1 << 2,
+            Input = 0x1,
+            Output = 0x1 << 1,
+            Binary = 0x1 << 2,
         };
 
         FileStream();
@@ -130,11 +139,11 @@ namespace seeta {
         {
             close();
             std::string mode_str;
-            if ( (mode & Input) && (mode & Output) )
+            if ((mode & Input) && (mode & Output))
             {
                 mode_str += "a+";
             }
-            else if ( mode & Input )
+            else if (mode & Input)
             {
                 mode_str += "r";
             }
@@ -142,7 +151,8 @@ namespace seeta {
             {
                 mode_str += "w";
             }
-            if ( mode & Binary ) mode_str += "b";
+            if (mode & Binary)
+                mode_str += "b";
 #if _MSC_VER >= 1600
             fopen_s(&iofile, path.c_str(), mode_str.c_str());
 #else
@@ -153,21 +163,24 @@ namespace seeta {
 
         void close()
         {
-            if (iofile != nullptr) std::fclose(iofile);
+            if (iofile != nullptr)
+                std::fclose(iofile);
         }
 
         bool is_opened() const { return iofile != nullptr; }
 
         size_t write(const char *data, size_t length) override
         {
-            if (iofile == nullptr) return 0;
+            if (iofile == nullptr)
+                return 0;
             auto result = std::fwrite(data, 1, length, iofile);
             return size_t(result);
         }
 
         size_t read(char *data, size_t length) override
         {
-            if (iofile == nullptr) return 0;
+            if (iofile == nullptr)
+                return 0;
             auto result = std::fread(data, 1, length, iofile);
             return size_t(result);
         }
@@ -188,7 +201,8 @@ namespace seeta {
         FileWriter() {}
         explicit FileWriter(const std::string &path, int mode = Output)
             : FileStream(path, (mode & (~Input)) | Output)
-        {}
+        {
+        }
 
         bool open(const std::string &path, int mode = Output)
         {
@@ -204,7 +218,8 @@ namespace seeta {
         FileReader() {}
         explicit FileReader(const std::string &path, int mode = Input)
             : FileStream(path, (mode & (~Output)) | Input)
-        {}
+        {
+        }
 
         bool open(const std::string &path, int mode = Input)
         {
@@ -213,4 +228,4 @@ namespace seeta {
     };
 }
 
-#endif  // INC_SEETA_STREAM_H
+#endif // INC_SEETA_STREAM_H

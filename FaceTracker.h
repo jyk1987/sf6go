@@ -6,12 +6,12 @@
 #include <string>
 #include <vector>
 
-
 namespace seeta
 {
     namespace v6
     {
-        class FaceTracker {
+        class FaceTracker
+        {
         public:
             /**
              * \brief initialize FaceTracker with face detector model
@@ -19,75 +19,74 @@ namespace seeta
              * \param video_width input video frame width
              * \param video_height input video frame height
              */
-            SEETA_API explicit FaceTracker( const seeta::ModelSetting &setting, int video_width, int video_height );
+            SEETA_API explicit FaceTracker(const seeta::ModelSetting &setting, int video_width, int video_height);
             SEETA_API ~FaceTracker();
 
-            SEETA_API void SetSingleCalculationThreads( int num );
-            
+            SEETA_API void SetSingleCalculationThreads(int num);
+
             /**
              * Set tracking frame interval
              */
-            SEETA_API void SetInterval(int interval); 
+            SEETA_API void SetInterval(int interval);
 
             /**
-             * \brief �������
-             * \param [in] image ����ͼ����Ҫ RGB ��ɫͨ��
-             * \return ��⵽��������SeetaTrackingFaceInfo������
-             * \note �˺�����֧�ֶ��̵߳��ã��ڶ��̻߳�������Ҫ������Ӧ�� FaceTracker �Ķ���ֱ���ü�⺯��
+             * \brief 检测人脸
+             * \param [in] image 输入图像，需要 RGB 彩色通道
+             * \return 检测到的人脸（SeetaTrackingFaceInfo）数组
+             * \note 此函数不支持多线程调用，在多线程环境下需要建立对应的 FaceTracker 的对象分别调用检测函数
              * \see SeetaTrackingFaceInfo, SeetaImageData
              */
-            SEETA_API SeetaTrackingFaceInfoArray Track( const SeetaImageData &image ) const;
+            SEETA_API SeetaTrackingFaceInfoArray Track(const SeetaImageData &image) const;
 
             /**
-             * \brief �������
-             * \param [in] image ����ͼ����Ҫ RGB ��ɫͨ��
-             * \param [in] frame_no ����֡�ţ������֡���й�
-             * \return ��⵽��������SeetaTrackingFaceInfo������
-             * \note �˺�����֧�ֶ��̵߳��ã��ڶ��̻߳�������Ҫ������Ӧ�� FaceTracker �Ķ���ֱ���ü�⺯��
+             * \brief 检测人脸
+             * \param [in] image 输入图像，需要 RGB 彩色通道
+             * \param [in] frame_no 输入帧号，跟输出帧号有关
+             * \return 检测到的人脸（SeetaTrackingFaceInfo）数组
+             * \note 此函数不支持多线程调用，在多线程环境下需要建立对应的 FaceTracker 的对象分别调用检测函数
              * \see SeetaTrackingFaceInfo, SeetaImageData
-             * \note frame_no С��0 ���Զ��� frame_no
+             * \note frame_no 小于0 则自动化 frame_no
              */
-            SEETA_API SeetaTrackingFaceInfoArray Track( const SeetaImageData &image, int frame_no ) const;
+            SEETA_API SeetaTrackingFaceInfoArray Track(const SeetaImageData &image, int frame_no) const;
 
             /**
-             * \brief ������С����
-             * \param [in] size ��С�ɼ���������С��Ϊ������͸߳˻��Ķ��θ�ֵ
-             * \note ��������Ϊ 20��С�� 20 ��ֵ�ᱻ����
+             * \brief 设置最小人脸
+             * \param [in] size 最小可检测的人脸大小，为人脸宽和高乘积的二次根值
+             * \note 最下人脸为 20，小于 20 的值会被忽略
              */
-            SEETA_API void SetMinFaceSize( int32_t size );
+            SEETA_API void SetMinFaceSize(int32_t size);
 
             /**
-             * \brief ��ȡ��С����
-             * \return ��С�ɼ���������С��Ϊ������͸߳˻��Ķ��θ�ֵ
+             * \brief 获取最小人脸
+             * \return 最小可检测的人脸大小，为人脸宽和高乘积的二次根值
              */
             SEETA_API int32_t GetMinFaceSize() const;
 
-
-            SEETA_API void SetThreshold( float thresh );
+            SEETA_API void SetThreshold(float thresh);
 
             SEETA_API float GetThreshold() const;
 
-
- 	    /**
-	      * \brief ��������������?
-	      * \param stable ����
-	      * \note ������������
-	      * \note ������������������
+            /**
+	      * \brief 靠靠靠靠靠靠靠?
+	      * \param stable 靠靠
+	      * \note 靠靠靠靠靠靠
+	      * \note 靠靠靠靠靠靠靠靠靠
 	     */
-	    SEETA_API void SetVideoStable(bool stable = true);
+            SEETA_API void SetVideoStable(bool stable = true);
 
-	    /**
-	      * \brief ������������?
-	      * \return ����
+            /**
+	      * \brief 靠靠靠靠靠靠?
+	      * \return 靠靠
 	      */
-	    SEETA_API bool GetVideoStable() const;
+            SEETA_API bool GetVideoStable() const;
 
             SEETA_API void SetVideoSize(int vidwidth, int vidheight);
 
-            SEETA_API void Reset();           
+            SEETA_API void Reset();
+
         private:
-            FaceTracker( const FaceTracker &other ) = delete;
-            const FaceTracker &operator=( const FaceTracker &other ) = delete;
+            FaceTracker(const FaceTracker &other) = delete;
+            const FaceTracker &operator=(const FaceTracker &other) = delete;
 
         private:
             class Implement;
