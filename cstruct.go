@@ -1,5 +1,7 @@
 package sf6go
 
+// #cgo CXXFLAGS: -std=c++1z -Wall -O3 -DNDEBUG -march=native
+// #cgo LDFLAGS: -L./lib -ltennis -lSeetaAuthorize -lSeetaFaceDetector600
 // #include <stdlib.h>
 // #include "CStruct.h"
 import "C"
@@ -51,6 +53,19 @@ func NewSeetaImageData(width, height, channels int) *SeetaImageData {
 			channels: C.int(channels),
 		},
 	}
+}
+
+// SeetaModelSetting 模型配置数据结构
+type SeetaModelSetting struct {
+	ptr *C.struct_SeetaModelSetting
+}
+
+func NewSeetaModelSetting(models []string) {
+	var setting C.struct_SeetaModelSetting
+	setting.device = C.SEETA_DEVICE_AUTO
+	setting.id = 0
+	// TODO:设置模型
+
 }
 
 func Test() {

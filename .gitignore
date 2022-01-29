@@ -90,8 +90,8 @@ fabric.properties
 # Binaries for programs and plugins
 *.exe
 *.exe~
-*.dll
-*.so
+# *.dll
+# *.so
 *.dylib
 
 # Test binary, built with `go test -c`
