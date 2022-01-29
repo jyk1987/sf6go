@@ -11,10 +11,10 @@ facedetector *newFaceDetector(SeetaModelSetting setting)
     facedetector *fd = (facedetector *)calloc(1, sizeof(facedetector));
     try
     {
-        seeta::ModelSetting set;
-        set.append("face_detector.csta");
+        // seeta::ModelSetting set;
+        // set.append("face_detector.csta");
 
-        seeta::FaceDetector *cppfd = new seeta::FaceDetector(set);
+        seeta::FaceDetector *cppfd = new seeta::FaceDetector(setting);
         fd->fd = (void *)cppfd;
     }
     catch (const std::exception &e)
