@@ -11,7 +11,6 @@ extern "C"
     };
 
     facedetector *newFaceDetector(SeetaModelSetting setting);
-    void
 
 #ifdef __cplusplus
 }
