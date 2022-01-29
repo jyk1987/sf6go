@@ -1,5 +1,6 @@
 package sf6go
 
+// #include <stdlib.h>
 // #include "CStruct.h"
 import "C"
 import (
@@ -37,6 +38,10 @@ func (s *SeetaImageData) GetData() []uint8 {
 func (s *SeetaImageData) SetData(data []uint8) {
 	// TODO: 完成数据转换和设置
 }
+func (s *SeetaImageData) Free() {
+	// ptr := unsafe.Pointer(s.ptr)
+	// C.free(ptr)
+}
 
 func NewSeetaImageData(width, height, channels int) *SeetaImageData {
 	return &SeetaImageData{
@@ -50,6 +55,8 @@ func NewSeetaImageData(width, height, channels int) *SeetaImageData {
 
 func Test() {
 	a := NewSeetaImageData(320, 160, 3)
+	// defer a.Free()
 	// sid.width = 123
 	log.Println(a.ptr)
+
 }
