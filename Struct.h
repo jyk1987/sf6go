@@ -28,7 +28,7 @@ namespace seeta
             : ImageData(image.data, image.width, image.height, image.channels) {}
 
         ImageData(int width, int height, int channels)
-            : supper({ width, height, channels, nullptr })
+            : supper({width, height, channels, nullptr})
         {
             this->m_data.reset(new byte[this->count()], std::default_delete<byte[]>());
             this->data = this->m_data.get();
@@ -42,7 +42,7 @@ namespace seeta
             this->copy_from(data);
         }
 
-        ImageData(const self&) = default;
+        ImageData(const self &) = default;
 
         ImageData &operator=(const self &) = default;
 
@@ -53,7 +53,7 @@ namespace seeta
         }
 
         ImageData(self &&other)
-            : supper({ other.width, other.height, other.channels, nullptr })
+            : supper({other.width, other.height, other.channels, nullptr})
         {
             this->m_data = std::move(other.m_data);
             this->data = this->m_data.get();
@@ -107,7 +107,7 @@ namespace seeta
 
         Point(const supper &other) : supper(other) {}
 
-        Point(int x, int y) : supper({ x, y }) {}
+        Point(int x, int y) : supper({x, y}) {}
 
         Point() : Point(0, 0) {}
     };
@@ -120,7 +120,7 @@ namespace seeta
 
         PointF(const supper &other) : supper(other) {}
 
-        PointF(double x, double y) : supper({ x, y }) {}
+        PointF(double x, double y) : supper({x, y}) {}
 
         PointF() : PointF(0, 0) {}
     };
@@ -133,7 +133,7 @@ namespace seeta
 
         Size(const supper &other) : supper(other) {}
 
-        Size(int width, int height) : supper({ width, height }) {}
+        Size(int width, int height) : supper({width, height}) {}
 
         Size() : Size(0, 0) {}
     };
@@ -146,21 +146,21 @@ namespace seeta
 
         Rect(const supper &other) : supper(other) {}
 
-        Rect(int x, int y, int width, int height) : supper({ x, y, width, height }) {}
+        Rect(int x, int y, int width, int height) : supper({x, y, width, height}) {}
 
         Rect() : Rect(0, 0, 0, 0) {}
 
-        Rect(int x, int y, const Size &size) : supper({ x, y, size.width, size.height }) {}
+        Rect(int x, int y, const Size &size) : supper({x, y, size.width, size.height}) {}
 
-        Rect(const Point &top_left, int width, int height) : supper({ top_left.x, top_left.y, width, height }) {}
+        Rect(const Point &top_left, int width, int height) : supper({top_left.x, top_left.y, width, height}) {}
 
-        Rect(const Point &top_left, const Size &size) : supper({ top_left.x, top_left.y, size.width, size.height }) {}
+        Rect(const Point &top_left, const Size &size) : supper({top_left.x, top_left.y, size.width, size.height}) {}
 
-        Rect(const Point &top_left, const Point &bottom_right) : supper({ top_left.x, top_left.y, bottom_right.x - top_left.x, bottom_right.y - top_left.y }) {}
+        Rect(const Point &top_left, const Point &bottom_right) : supper({top_left.x, top_left.y, bottom_right.x - top_left.x, bottom_right.y - top_left.y}) {}
 
-        operator Point() const { return{ this->x, this->y }; }
+        operator Point() const { return {this->x, this->y}; }
 
-        operator Size() const { return{ this->width, this->height }; }
+        operator Size() const { return {this->width, this->height}; }
     };
 
     class Region : public SeetaRegion
@@ -171,13 +171,13 @@ namespace seeta
 
         Region(const supper &other) : supper(other) {}
 
-        Region(int top, int bottom, int left, int right) : supper({ top, bottom, left, right }) {}
+        Region(int top, int bottom, int left, int right) : supper({top, bottom, left, right}) {}
 
         Region() : Region(0, 0, 0, 0) {}
 
         Region(const Rect &rect) : Region(rect.y, rect.y + rect.height, rect.x, rect.x + rect.width) {}
 
-        operator Rect() const { return{ left, top, right - left, bottom - top }; }
+        operator Rect() const { return {left, top, right - left, bottom - top}; }
     };
 
     class ModelSetting : public SeetaModelSetting
@@ -196,15 +196,16 @@ namespace seeta
         ~ModelSetting() = default;
 
         ModelSetting()
-            : supper({ SEETA_DEVICE_AUTO, 0, nullptr })
+            : supper({SEETA_DEVICE_AUTO, 0, nullptr})
         {
             this->update();
         }
 
         ModelSetting(const supper &other)
-            : supper({ other.device, other.id, nullptr })
+            : supper({other.device, other.id, nullptr})
         {
-            if (other.model) {
+            if (other.model)
+            {
                 int i = 0;
                 while (other.model[i])
                 {
@@ -216,7 +217,7 @@ namespace seeta
         }
 
         ModelSetting(const self &other)
-            : supper({ other.device, other.id, nullptr })
+            : supper({other.device, other.id, nullptr})
         {
             this->m_model_string = other.m_model_string;
             this->update();
@@ -238,7 +239,7 @@ namespace seeta
         }
 
         ModelSetting(self &&other)
-            : supper({ other.device, other.id, nullptr })
+            : supper({other.device, other.id, nullptr})
         {
             this->m_model_string = std::move(other.m_model_string);
             this->update();
@@ -254,7 +255,7 @@ namespace seeta
         }
 
         ModelSetting(const std::string &model, SeetaDevice device, int id)
-            : supper({ device, id, nullptr })
+            : supper({device, id, nullptr})
         {
             this->append(model);
         }
@@ -268,7 +269,7 @@ namespace seeta
         ModelSetting(const std::string &model) : self(model, SEETA_DEVICE_AUTO) {}
 
         ModelSetting(const std::vector<std::string> &model, SeetaDevice device, int id)
-            : supper({ device, id, nullptr })
+            : supper({device, id, nullptr})
         {
             this->append(model);
         }
@@ -282,7 +283,7 @@ namespace seeta
         ModelSetting(const std::vector<std::string> &model) : self(model, SEETA_DEVICE_AUTO) {}
 
         ModelSetting(SeetaDevice device, int id)
-            : supper({ device, id, nullptr })
+            : supper({device, id, nullptr})
         {
             this->update();
         }
@@ -391,7 +392,7 @@ namespace seeta
         }
 
         Buffer(self &&other)
-            : supper({ other.buffer, other.size }), m_buffer(std::move(other.m_buffer)), m_size(other.m_size) {}
+            : supper({other.buffer, other.size}), m_buffer(std::move(other.m_buffer)), m_size(other.m_size) {}
 
         Buffer &operator=(self &&other)
         {
@@ -408,14 +409,16 @@ namespace seeta
          * \param borrow if borrow or copy buffer
          */
         Buffer(const supper &other, bool borrow)
-            : supper({ nullptr, 0 })
+            : supper({nullptr, 0})
         {
-            if (borrow) this->borrow(other.buffer, other.size);
-            else this->rebind(other.buffer, other.size);
+            if (borrow)
+                this->borrow(other.buffer, other.size);
+            else
+                this->rebind(other.buffer, other.size);
         }
 
         Buffer(const void *buffer, int64_t size)
-            : supper({ nullptr, 0 })
+            : supper({nullptr, 0})
         {
             this->m_size = size;
             if (this->m_size)
@@ -435,7 +438,7 @@ namespace seeta
         Buffer() : Buffer(nullptr, 0) {}
 
         Buffer(std::istream &in, int64_t size = -1)
-            : supper({ nullptr, 0 })
+            : supper({nullptr, 0})
         {
             if (size < 0)
             {
@@ -451,7 +454,7 @@ namespace seeta
             this->buffer = this->m_buffer.get();
             this->size = this->m_size;
 
-            in.read(reinterpret_cast<char*>(this->buffer), this->size);
+            in.read(reinterpret_cast<char *>(this->buffer), this->size);
         }
 
         void copy_from(const void *data, int64_t size = -1)
@@ -470,7 +473,8 @@ namespace seeta
 
         static void copy(void *dst, const void *src, size_t size)
         {
-            if (dst == nullptr || src == nullptr) return;
+            if (dst == nullptr || src == nullptr)
+                return;
             std::memcpy(dst, src, size);
         }
 
@@ -481,7 +485,8 @@ namespace seeta
 
         void rebind(const void *buffer, int64_t size)
         {
-            if (size < 0) size = 0;
+            if (size < 0)
+                size = 0;
             if (size > this->m_size)
             {
                 this->m_buffer.reset(new byte[size_t(size)], std::default_delete<byte[]>());
@@ -526,15 +531,16 @@ namespace seeta
         ~ModelBuffer() = default;
 
         ModelBuffer()
-            : supper({ SEETA_DEVICE_AUTO, 0, nullptr })
+            : supper({SEETA_DEVICE_AUTO, 0, nullptr})
         {
             this->update();
         }
 
         ModelBuffer(const supper &other)
-            : supper({ other.device, other.id, nullptr })
+            : supper({other.device, other.id, nullptr})
         {
-            if (other.buffer) {
+            if (other.buffer)
+            {
                 int i = 0;
                 while (other.buffer[i].buffer && other.buffer[i].size)
                 {
@@ -546,7 +552,7 @@ namespace seeta
         }
 
         ModelBuffer(const self &other)
-            : supper({ other.device, other.id, nullptr })
+            : supper({other.device, other.id, nullptr})
         {
             this->m_model_buffer = other.m_model_buffer;
             this->update();
@@ -568,7 +574,7 @@ namespace seeta
         }
 
         ModelBuffer(self &&other)
-            : supper({ other.device, other.id, nullptr })
+            : supper({other.device, other.id, nullptr})
         {
             this->m_model_buffer = std::move(other.m_model_buffer);
             this->update();
@@ -583,9 +589,8 @@ namespace seeta
             return *this;
         }
 
-
         ModelBuffer(const seeta::Buffer &buffer, SeetaDevice device, int id)
-            : supper({ device, id, nullptr })
+            : supper({device, id, nullptr})
         {
             this->append(buffer);
         }
@@ -599,7 +604,7 @@ namespace seeta
         ModelBuffer(const seeta::Buffer &buffer) : self(buffer, SEETA_DEVICE_AUTO) {}
 
         ModelBuffer(const std::vector<seeta::Buffer> &buffer, SeetaDevice device, int id)
-            : supper({ device, id, nullptr })
+            : supper({device, id, nullptr})
         {
             this->append(buffer);
         }
@@ -613,7 +618,7 @@ namespace seeta
         ModelBuffer(const std::vector<seeta::Buffer> &buffer) : self(buffer, SEETA_DEVICE_AUTO) {}
 
         ModelBuffer(SeetaDevice device, int id)
-            : supper({ device, id, nullptr })
+            : supper({device, id, nullptr})
         {
             this->update();
         }
@@ -694,7 +699,7 @@ namespace seeta
             {
                 this->m_buffer.push_back(model_buffer);
             }
-            this->m_buffer.push_back({ nullptr, 0 });    // terminate with empty buffer
+            this->m_buffer.push_back({nullptr, 0}); // terminate with empty buffer
             this->buffer = this->m_buffer.data();
         }
     };
