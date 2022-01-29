@@ -1,7 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"git.gyb3.cn/kuaibang/sf6go"
+)
 
 func main() {
-	fmt.Println(111)
+
+	sf6go.Test()
 }
