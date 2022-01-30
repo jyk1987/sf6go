@@ -7,7 +7,8 @@ package sf6go
 import "C"
 import (
 	"log"
-	"unsafe"
+
+	"gocv.io/x/gocv"
 )
 
 // SeetaImageData 图像数据结构
@@ -38,11 +39,22 @@ func (s *SeetaImageData) GetData() []uint8 {
 	// TODO: 完成数据获取
 	return nil
 }
-func (s *SeetaImageData) SetData(data []uint8) {
-	// TODO: 完成数据转换和设置
+func (s *SeetaImageData) SetMat(mat *gocv.Mat) error {
+	data, err := mat.DataPtrUint8()
+	if err != nil {
+		return err
+	}
+	cdata := make([]C.uchar, len(data))
+	for i, v := range data {
+
+		cdata[i] = C.uchar(v)
+		// log.Println(cdata[i], ":", v)
+	}
+	s.ptr.data = &cdata[0]
+	return nil
 }
-func (s *SeetaImageData) Free() {
-	C.free(unsafe.Pointer(s.ptr.data))
+func (s *SeetaImageData) Close() {
+	// C.free(unsafe.Pointer(s.ptr))
 	// C.free(unsafe.Pointer(&s.ptr.width))
 	// C.free(unsafe.Pointer(&s.ptr.height))
 	// C.free(unsafe.Pointer(&s.ptr.channels))
@@ -81,8 +93,7 @@ func NewSeetaImageData(width, height, channels int) *SeetaImageData {
 
 func TestCStruct() {
 	a := NewSeetaImageData(320, 160, 3)
-	defer a.Free()
-	// sid.width = 123
+	defer a.Close()
 	log.Println(a.ptr)
 
 }

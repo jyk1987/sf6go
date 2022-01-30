@@ -14,11 +14,17 @@ facedetector *newFaceDetector(char *model)
         seeta::ModelSetting setting;
         setting.append(model);
         seeta::FaceDetector *cppfd = new seeta::FaceDetector(setting);
-        fd->fd = (void *)cppfd;
+        fd->cls = (void *)cppfd;
     }
     catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }
     return fd;
+}
+
+SeetaFaceInfoArray detect(facedetector *fd, SeetaImageData image)
+{
+    seeta::FaceDetector *cls = (seeta::FaceDetector *)fd->cls;
+    return cls->detect(image);
 }

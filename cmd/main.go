@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	sf6go.TestCStruct()
+	// sf6go.TestCStruct()
 	sf6go.TestFaceDetector()
 }

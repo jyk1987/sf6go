@@ -22,74 +22,74 @@ extern "C"
 
 #include <stdint.h>
 
-    struct SeetaImageData
+    typedef struct SeetaImageData
     {
         int width;
         int height;
         int channels;
         unsigned char *data;
-    };
+    } SeetaImageData;
 
-    struct SeetaPoint
+    typedef struct SeetaPoint
     {
         int x;
         int y;
-    };
+    } SeetaPoint;
 
-    struct SeetaPointF
+    typedef struct SeetaPointF
     {
         double x;
         double y;
-    };
+    } SeetaPointF;
 
-    struct SeetaSize
+    typedef struct SeetaSize
     {
         int width;
         int height;
-    };
+    } SeetaSize;
 
-    struct SeetaRect
+    typedef struct SeetaRect
     {
         int x;
         int y;
         int width;
         int height;
-    };
+    } SeetaRect;
 
-    struct SeetaRegion
+    typedef struct SeetaRegion
     {
         int top;
         int bottom;
         int left;
         int right;
-    };
+    } SeetaRegion;
 
-    enum SeetaDevice
+    typedef enum SeetaDevice
     {
         SEETA_DEVICE_AUTO = 0,
         SEETA_DEVICE_CPU = 1,
         SEETA_DEVICE_GPU = 2,
-    };
+    } SeetaDevice;
 
-    struct SeetaModelSetting
+    typedef struct SeetaModelSetting
     {
         enum SeetaDevice device;
         int id;             // when device is GPU, id means GPU id
         const char **model; // model string terminate with nullptr
-    };
+    } SeetaModelSetting;
 
-    struct SeetaBuffer
+    typedef struct SeetaBuffer
     {
         void *buffer;
         int64_t size;
-    };
+    } SeetaBuffer;
 
-    // struct SeetaModelBuffer
-    // {
-    //     enum SeetaDevice device;
-    //     int id;                    // when device is GPU, id means GPU id
-    //     const SeetaBuffer *buffer; // input buffers, terminate with empty buffer(buffer=nullptr, size=0)
-    // };
+    typedef struct SeetaModelBuffer
+    {
+        enum SeetaDevice device;
+        int id;                    // when device is GPU, id means GPU id
+        const SeetaBuffer *buffer; // input buffers, terminate with empty buffer(buffer=nullptr, size=0)
+    } SeetaModelBuffer;
 
 #ifdef __cplusplus
 }

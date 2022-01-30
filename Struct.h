@@ -515,194 +515,194 @@ namespace seeta
         int64_t m_size = 0;
     };
 
-    // class ModelBuffer : SeetaModelBuffer
-    // {
-    // public:
-    //     using self = ModelBuffer;
-    //     using supper = SeetaModelBuffer;
+    class ModelBuffer : SeetaModelBuffer
+    {
+    public:
+        using self = ModelBuffer;
+        using supper = SeetaModelBuffer;
 
-    //     enum Device
-    //     {
-    //         AUTO = SEETA_DEVICE_AUTO,
-    //         CPU = SEETA_DEVICE_CPU,
-    //         GPU = SEETA_DEVICE_GPU,
-    //     };
+        enum Device
+        {
+            AUTO = SEETA_DEVICE_AUTO,
+            CPU = SEETA_DEVICE_CPU,
+            GPU = SEETA_DEVICE_GPU,
+        };
 
-    //     ~ModelBuffer() = default;
+        ~ModelBuffer() = default;
 
-    //     ModelBuffer()
-    //         : supper({SEETA_DEVICE_AUTO, 0, nullptr})
-    //     {
-    //         this->update();
-    //     }
+        ModelBuffer()
+            : supper({SEETA_DEVICE_AUTO, 0, nullptr})
+        {
+            this->update();
+        }
 
-    //     ModelBuffer(const supper &other)
-    //         : supper({other.device, other.id, nullptr})
-    //     {
-    //         if (other.buffer)
-    //         {
-    //             int i = 0;
-    //             while (other.buffer[i].buffer && other.buffer[i].size)
-    //             {
-    //                 m_model_buffer.emplace_back(other.buffer[i]);
-    //                 ++i;
-    //             }
-    //         }
-    //         this->update();
-    //     }
+        ModelBuffer(const supper &other)
+            : supper({other.device, other.id, nullptr})
+        {
+            if (other.buffer)
+            {
+                int i = 0;
+                while (other.buffer[i].buffer && other.buffer[i].size)
+                {
+                    m_model_buffer.emplace_back(other.buffer[i]);
+                    ++i;
+                }
+            }
+            this->update();
+        }
 
-    //     ModelBuffer(const self &other)
-    //         : supper({other.device, other.id, nullptr})
-    //     {
-    //         this->m_model_buffer = other.m_model_buffer;
-    //         this->update();
-    //     }
+        ModelBuffer(const self &other)
+            : supper({other.device, other.id, nullptr})
+        {
+            this->m_model_buffer = other.m_model_buffer;
+            this->update();
+        }
 
-    //     ModelBuffer &operator=(const supper &other)
-    //     {
-    //         this->operator=(self(other));
-    //         return *this;
-    //     }
+        ModelBuffer &operator=(const supper &other)
+        {
+            this->operator=(self(other));
+            return *this;
+        }
 
-    //     ModelBuffer &operator=(const self &other)
-    //     {
-    //         this->device = other.device;
-    //         this->id = other.id;
-    //         this->m_model_buffer = other.m_model_buffer;
-    //         this->update();
-    //         return *this;
-    //     }
+        ModelBuffer &operator=(const self &other)
+        {
+            this->device = other.device;
+            this->id = other.id;
+            this->m_model_buffer = other.m_model_buffer;
+            this->update();
+            return *this;
+        }
 
-    //     ModelBuffer(self &&other)
-    //         : supper({other.device, other.id, nullptr})
-    //     {
-    //         this->m_model_buffer = std::move(other.m_model_buffer);
-    //         this->update();
-    //     }
+        ModelBuffer(self &&other)
+            : supper({other.device, other.id, nullptr})
+        {
+            this->m_model_buffer = std::move(other.m_model_buffer);
+            this->update();
+        }
 
-    //     ModelBuffer &operator=(self &&other)
-    //     {
-    //         this->device = other.device;
-    //         this->id = other.id;
-    //         this->m_model_buffer = std::move(other.m_model_buffer);
-    //         this->update();
-    //         return *this;
-    //     }
+        ModelBuffer &operator=(self &&other)
+        {
+            this->device = other.device;
+            this->id = other.id;
+            this->m_model_buffer = std::move(other.m_model_buffer);
+            this->update();
+            return *this;
+        }
 
-    //     ModelBuffer(const seeta::Buffer &buffer, SeetaDevice device, int id)
-    //         : supper({device, id, nullptr})
-    //     {
-    //         this->append(buffer);
-    //     }
+        ModelBuffer(const seeta::Buffer &buffer, SeetaDevice device, int id)
+            : supper({device, id, nullptr})
+        {
+            this->append(buffer);
+        }
 
-    //     ModelBuffer(const seeta::Buffer &buffer, SeetaDevice device) : self(buffer, device, 0) {}
+        ModelBuffer(const seeta::Buffer &buffer, SeetaDevice device) : self(buffer, device, 0) {}
 
-    //     ModelBuffer(const seeta::Buffer &buffer, Device device, int id) : self(buffer, SeetaDevice(device), id) {}
+        ModelBuffer(const seeta::Buffer &buffer, Device device, int id) : self(buffer, SeetaDevice(device), id) {}
 
-    //     ModelBuffer(const seeta::Buffer &buffer, Device device) : self(buffer, SeetaDevice(device)) {}
+        ModelBuffer(const seeta::Buffer &buffer, Device device) : self(buffer, SeetaDevice(device)) {}
 
-    //     ModelBuffer(const seeta::Buffer &buffer) : self(buffer, SEETA_DEVICE_AUTO) {}
+        ModelBuffer(const seeta::Buffer &buffer) : self(buffer, SEETA_DEVICE_AUTO) {}
 
-    //     ModelBuffer(const std::vector<seeta::Buffer> &buffer, SeetaDevice device, int id)
-    //         : supper({device, id, nullptr})
-    //     {
-    //         this->append(buffer);
-    //     }
+        ModelBuffer(const std::vector<seeta::Buffer> &buffer, SeetaDevice device, int id)
+            : supper({device, id, nullptr})
+        {
+            this->append(buffer);
+        }
 
-    //     ModelBuffer(const std::vector<seeta::Buffer> &buffer, SeetaDevice device) : self(buffer, device, 0) {}
+        ModelBuffer(const std::vector<seeta::Buffer> &buffer, SeetaDevice device) : self(buffer, device, 0) {}
 
-    //     ModelBuffer(const std::vector<seeta::Buffer> &buffer, Device device, int id) : self(buffer, SeetaDevice(device), id) {}
+        ModelBuffer(const std::vector<seeta::Buffer> &buffer, Device device, int id) : self(buffer, SeetaDevice(device), id) {}
 
-    //     ModelBuffer(const std::vector<seeta::Buffer> &buffer, Device device) : self(buffer, SeetaDevice(device)) {}
+        ModelBuffer(const std::vector<seeta::Buffer> &buffer, Device device) : self(buffer, SeetaDevice(device)) {}
 
-    //     ModelBuffer(const std::vector<seeta::Buffer> &buffer) : self(buffer, SEETA_DEVICE_AUTO) {}
+        ModelBuffer(const std::vector<seeta::Buffer> &buffer) : self(buffer, SEETA_DEVICE_AUTO) {}
 
-    //     ModelBuffer(SeetaDevice device, int id)
-    //         : supper({device, id, nullptr})
-    //     {
-    //         this->update();
-    //     }
+        ModelBuffer(SeetaDevice device, int id)
+            : supper({device, id, nullptr})
+        {
+            this->update();
+        }
 
-    //     ModelBuffer(SeetaDevice device) : self(device, 0) {}
+        ModelBuffer(SeetaDevice device) : self(device, 0) {}
 
-    //     ModelBuffer(Device device, int id) : self(SeetaDevice(device), id) {}
+        ModelBuffer(Device device, int id) : self(SeetaDevice(device), id) {}
 
-    //     ModelBuffer(Device device) : self(SeetaDevice(device)) {}
+        ModelBuffer(Device device) : self(SeetaDevice(device)) {}
 
-    //     Device get_device() const { return Device(this->device); }
-    //     int get_id() const { return this->id; }
+        Device get_device() const { return Device(this->device); }
+        int get_id() const { return this->id; }
 
-    //     Device set_device(Device device)
-    //     {
-    //         return set_device(SeetaDevice(device));
-    //     }
+        Device set_device(Device device)
+        {
+            return set_device(SeetaDevice(device));
+        }
 
-    //     Device set_device(SeetaDevice device)
-    //     {
-    //         auto old = this->device;
-    //         this->device = device;
-    //         return Device(old);
-    //     }
+        Device set_device(SeetaDevice device)
+        {
+            auto old = this->device;
+            this->device = device;
+            return Device(old);
+        }
 
-    //     int set_id(int id)
-    //     {
-    //         const auto old = this->id;
-    //         this->id = id;
-    //         return old;
-    //     }
+        int set_id(int id)
+        {
+            const auto old = this->id;
+            this->id = id;
+            return old;
+        }
 
-    //     void clear()
-    //     {
-    //         this->m_model_buffer.clear();
-    //         this->update();
-    //     }
+        void clear()
+        {
+            this->m_model_buffer.clear();
+            this->update();
+        }
 
-    //     void append(const seeta::Buffer &buffer)
-    //     {
-    //         this->m_model_buffer.push_back(buffer);
-    //         this->update();
-    //     }
+        void append(const seeta::Buffer &buffer)
+        {
+            this->m_model_buffer.push_back(buffer);
+            this->update();
+        }
 
-    //     void append(const std::vector<seeta::Buffer> &model)
-    //     {
-    //         this->m_model_buffer.insert(this->m_model_buffer.end(), model.begin(), model.end());
-    //         this->update();
-    //     }
+        void append(const std::vector<seeta::Buffer> &model)
+        {
+            this->m_model_buffer.insert(this->m_model_buffer.end(), model.begin(), model.end());
+            this->update();
+        }
 
-    //     const std::vector<seeta::Buffer> &get_buffer() const
-    //     {
-    //         return this->m_model_buffer;
-    //     }
+        const std::vector<seeta::Buffer> &get_buffer() const
+        {
+            return this->m_model_buffer;
+        }
 
-    //     const seeta::Buffer &get_buffer(size_t i) const
-    //     {
-    //         return this->m_model_buffer[i];
-    //     }
+        const seeta::Buffer &get_buffer(size_t i) const
+        {
+            return this->m_model_buffer[i];
+        }
 
-    //     size_t count() const
-    //     {
-    //         return this->m_model_buffer.size();
-    //     }
+        size_t count() const
+        {
+            return this->m_model_buffer.size();
+        }
 
-    // private:
-    //     std::vector<SeetaBuffer> m_buffer;
-    //     std::vector<seeta::Buffer> m_model_buffer;
+    private:
+        std::vector<SeetaBuffer> m_buffer;
+        std::vector<seeta::Buffer> m_model_buffer;
 
-    //     /**
-    //      * \brief build supper::buffer
-    //      */
-    //     void update()
-    //     {
-    //         this->m_buffer.clear();
-    //         this->m_buffer.reserve(m_model_buffer.size() + 1);
-    //         for (auto &model_buffer : m_model_buffer)
-    //         {
-    //             this->m_buffer.push_back(model_buffer);
-    //         }
-    //         this->m_buffer.push_back({nullptr, 0}); // terminate with empty buffer
-    //         this->buffer = this->m_buffer.data();
-    //     }
-    // };
+        /**
+         * \brief build supper::buffer
+         */
+        void update()
+        {
+            this->m_buffer.clear();
+            this->m_buffer.reserve(m_model_buffer.size() + 1);
+            for (auto &model_buffer : m_model_buffer)
+            {
+                this->m_buffer.push_back(model_buffer);
+            }
+            this->m_buffer.push_back({nullptr, 0}); // terminate with empty buffer
+            this->buffer = this->m_buffer.data();
+        }
+    };
 }
 
 #endif
