@@ -8,6 +8,7 @@ import "C"
 
 import (
 	"log"
+	"sync"
 	"time"
 	"unsafe"
 
@@ -33,12 +34,12 @@ func (s *FaceDetector) detect(imageData *SeetaImageData) {
 }
 
 func (s *FaceDetector) Close() {
-	C.free(unsafe.Pointer(s.ptr))
+	C.facedetector_free(s.ptr)
 }
 
 func TestFaceDetector() {
 	model := "/var/sf6/models/face_detector.csta"
-	fd := NewFaceDetector(model)
+
 	img := gocv.IMRead("duo6.jpeg", gocv.IMReadColor)
 	defer img.Close()
 	imageData := NewSeetaImageData(img.Cols(), img.Rows(), img.Channels())
@@ -48,10 +49,21 @@ func TestFaceDetector() {
 		log.Panic(err)
 	}
 
-	for i := 0; i < 10; i++ {
-		start := time.Now()
-		fd.detect(imageData)
-		log.Println("耗时:", time.Since(start))
+	var wait sync.WaitGroup
+
+	for i := 0; i < 1; i++ {
+		wait.Add(1)
+		go func() {
+			fd := NewFaceDetector(model)
+			defer fd.Close()
+			for j := 0; j < 1000; j++ {
+				start := time.Now()
+				fd.detect(imageData)
+				log.Println("耗时:", time.Since(start))
+			}
+			wait.Done()
+		}()
 	}
-	defer fd.Close()
+	wait.Wait()
+
 }

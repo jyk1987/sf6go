@@ -28,3 +28,17 @@ SeetaFaceInfoArray detect(facedetector *fd, SeetaImageData image)
     seeta::FaceDetector *cls = (seeta::FaceDetector *)fd->cls;
     return cls->detect(image);
 }
+
+void facedetector_free(facedetector *fd)
+{
+    if (fd)
+    {
+        if (fd->cls)
+        {
+            seeta::FaceDetector *cls = (seeta::FaceDetector *)fd->cls;
+            delete cls;
+            fd->cls = NULL;
+        }
+        free(fd);
+    }
+}
