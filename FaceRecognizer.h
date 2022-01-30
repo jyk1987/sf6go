@@ -12,14 +12,18 @@
 // #define SEETA_FACE_RECOGNIZER_MINOR_VERSION 0
 // #define SEETA_FACE_RECOGNIZER_SINOR_VERSION 0
 
-namespace seeta {
-    namespace SEETA_FACE_RECOGNIZE_NAMESPACE_VERSION {
-        class FaceRecognizer {
+namespace seeta
+{
+    namespace SEETA_FACE_RECOGNIZE_NAMESPACE_VERSION
+    {
+        class FaceRecognizer
+        {
         public:
             using self = FaceRecognizer;
-            enum Property {
-                 PROPERTY_NUMBER_THREADS = 4,
-                 PROPERTY_ARM_CPU_MODE = 5
+            enum Property
+            {
+                PROPERTY_NUMBER_THREADS = 4,
+                PROPERTY_ARM_CPU_MODE = 5
             };
 
             SEETA_API explicit FaceRecognizer(const SeetaModelSetting &setting);
@@ -41,7 +45,8 @@ namespace seeta {
 
             SEETA_API float CalculateSimilarity(const float *features1, const float *features2) const;
 
-            static seeta::ImageData CropFace(const SeetaImageData &image, const SeetaPointF *points) {
+            static seeta::ImageData CropFace(const SeetaImageData &image, const SeetaPointF *points)
+            {
                 seeta::ImageData face(GetCropFaceWidth(), GetCropFaceHeight(), GetCropFaceChannels());
                 CropFace(image, points, face);
                 return face;
@@ -55,7 +60,8 @@ namespace seeta {
 
             SEETA_API bool CropFaceV2(const SeetaImageData &image, const SeetaPointF *points, SeetaImageData &face);
 
-            seeta::ImageData CropFaceV2(const SeetaImageData &image, const SeetaPointF *points) {
+            seeta::ImageData CropFaceV2(const SeetaImageData &image, const SeetaPointF *points)
+            {
                 seeta::ImageData face(GetCropFaceWidthV2(), GetCropFaceHeightV2(), GetCropFaceChannelsV2());
                 CropFaceV2(image, points, face);
                 return face;
@@ -65,10 +71,9 @@ namespace seeta {
 
             SEETA_API double get(Property property) const;
 
-
         private:
             FaceRecognizer(const FaceRecognizer &) = delete;
-            const FaceRecognizer &operator=(const FaceRecognizer&) = delete;
+            const FaceRecognizer &operator=(const FaceRecognizer &) = delete;
 
         private:
             class Implement;
@@ -78,4 +83,4 @@ namespace seeta {
     using namespace SEETA_FACE_RECOGNIZE_NAMESPACE_VERSION;
 }
 
-#endif //SEETA_FACERECOGNIZER_FACERECOGNIZER_H
+#endif // SEETA_FACERECOGNIZER_FACERECOGNIZER_H

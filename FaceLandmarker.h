@@ -8,9 +8,12 @@
 #include "Struct.h"
 #include "SeetaFaceLandmarkerConfig.h"
 
-namespace seeta {
-    namespace SEETA_FACE_LANDMARKER_NAMESPACE_VERSION {
-        class FaceLandmarker {
+namespace seeta
+{
+    namespace SEETA_FACE_LANDMARKER_NAMESPACE_VERSION
+    {
+        class FaceLandmarker
+        {
         public:
             using self = FaceLandmarker;
 
@@ -25,24 +28,28 @@ namespace seeta {
 
             SEETA_API void mark(const SeetaImageData &image, const SeetaRect &face, SeetaPointF *points, int32_t *mask) const;
 
-            std::vector<SeetaPointF> mark(const SeetaImageData &image, const SeetaRect &face) const {
+            std::vector<SeetaPointF> mark(const SeetaImageData &image, const SeetaRect &face) const
+            {
                 std::vector<SeetaPointF> points(this->number());
                 mark(image, face, points.data());
                 return points;
             }
 
-            class PointWithMask {
+            class PointWithMask
+            {
             public:
                 SeetaPointF point;
                 bool mask;
             };
 
-            std::vector<PointWithMask> mark_v2(const SeetaImageData &image, const SeetaRect &face) const {
+            std::vector<PointWithMask> mark_v2(const SeetaImageData &image, const SeetaRect &face) const
+            {
                 std::vector<SeetaPointF> points(this->number());
                 std::vector<int32_t> masks(this->number());
                 mark(image, face, points.data(), masks.data());
                 std::vector<PointWithMask> point_with_masks(this->number());
-                for (int i = 0; i < this->number(); ++i) {
+                for (int i = 0; i < this->number(); ++i)
+                {
                     point_with_masks[i].point = points[i];
                     point_with_masks[i].mask = masks[i];
                 }
@@ -51,7 +58,7 @@ namespace seeta {
 
         private:
             FaceLandmarker(const FaceLandmarker &) = delete;
-            const FaceLandmarker &operator=(const FaceLandmarker&) = delete;
+            const FaceLandmarker &operator=(const FaceLandmarker &) = delete;
 
         private:
             class Implement;
@@ -61,4 +68,4 @@ namespace seeta {
     using namespace SEETA_FACE_LANDMARKER_NAMESPACE_VERSION;
 }
 
-#endif //SEETA_FACELANDMARKER_FACELANDMARKER_H
+#endif // SEETA_FACELANDMARKER_FACELANDMARKER_H

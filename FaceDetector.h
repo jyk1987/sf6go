@@ -9,13 +9,17 @@
 #include "CFaceInfo.h"
 #include "SeetaFaceDetectorConfig.h"
 
-namespace seeta {
-    namespace SEETA_FACE_DETECTOR_NAMESPACE_VERSION {
-        class FaceDetector {
+namespace seeta
+{
+    namespace SEETA_FACE_DETECTOR_NAMESPACE_VERSION
+    {
+        class FaceDetector
+        {
         public:
             using self = FaceDetector;
 
-            enum Property {
+            enum Property
+            {
                 PROPERTY_MIN_FACE_SIZE,
                 PROPERTY_THRESHOLD,
                 PROPERTY_MAX_IMAGE_WIDTH,
@@ -32,8 +36,9 @@ namespace seeta {
             SEETA_API explicit FaceDetector(const self *other);
 
             SEETA_API SeetaFaceInfoArray detect(const SeetaImageData &image) const;
-            
-            std::vector<SeetaFaceInfo> detect_v2(const SeetaImageData &image) const {
+
+            std::vector<SeetaFaceInfo> detect_v2(const SeetaImageData &image) const
+            {
                 auto faces = this->detect(image);
                 return std::vector<SeetaFaceInfo>(faces.data, faces.data + faces.size);
             }
@@ -56,4 +61,4 @@ namespace seeta {
     using namespace SEETA_FACE_DETECTOR_NAMESPACE_VERSION;
 }
 
-#endif //INC_SEETA_FACEDETECTOR_H
+#endif // INC_SEETA_FACEDETECTOR_H

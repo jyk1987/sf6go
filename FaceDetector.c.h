@@ -1,16 +1,17 @@
 #pragma once
-#include "FaceDetector.h"
 
+// #include "FaceDetector.h"
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-    struct facedetector
+
+    typedef struct facedetector
     {
         void *fd;
-    };
+    } facedetector;
 
-    facedetector *newFaceDetector(SeetaModelSetting setting);
+    facedetector *newFaceDetector(char *model);
 
 #ifdef __cplusplus
 }

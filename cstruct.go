@@ -7,6 +7,7 @@ package sf6go
 import "C"
 import (
 	"log"
+	"unsafe"
 )
 
 // SeetaImageData 图像数据结构
@@ -41,8 +42,10 @@ func (s *SeetaImageData) SetData(data []uint8) {
 	// TODO: 完成数据转换和设置
 }
 func (s *SeetaImageData) Free() {
-	// ptr := unsafe.Pointer(s.ptr)
-	// C.free(ptr)
+	C.free(unsafe.Pointer(s.ptr.data))
+	// C.free(unsafe.Pointer(&s.ptr.width))
+	// C.free(unsafe.Pointer(&s.ptr.height))
+	// C.free(unsafe.Pointer(&s.ptr.channels))
 }
 
 func NewSeetaImageData(width, height, channels int) *SeetaImageData {
@@ -56,22 +59,42 @@ func NewSeetaImageData(width, height, channels int) *SeetaImageData {
 }
 
 // SeetaModelSetting 模型配置数据结构
-type SeetaModelSetting struct {
-	ptr *C.struct_SeetaModelSetting
-}
+// type SeetaModelSetting struct {
+// 	ptr *C.struct_SeetaModelSetting
+// }
 
-func NewSeetaModelSetting(models []string) {
-	var setting C.struct_SeetaModelSetting
-	setting.device = C.SEETA_DEVICE_AUTO
-	setting.id = 0
-	// TODO:设置模型
+// func NewSeetaModelSetting(model string) *SeetaModelSetting {
+// 	var setting C.struct_SeetaModelSetting
+// 	setting.device = C.SEETA_DEVICE_AUTO
+// 	setting.id = 0
+// 	css := make([]*C.char, len(models))
+// 	for i, v := range models {
+// 		cs := C.CString(v)
+// 		defer C.free(unsafe.Pointer(cs))
+// 		css[i] = cs
+// 	}
+// 	setting.model = &css[0]
+// 	return &SeetaModelSetting{
+// 		ptr: &setting,
+// 	}
+// }
 
-}
-
-func Test() {
+func TestCStruct() {
 	a := NewSeetaImageData(320, 160, 3)
-	// defer a.Free()
+	defer a.Free()
 	// sid.width = 123
 	log.Println(a.ptr)
 
 }
+
+// GoStrings 将字符串数组转换成go的字符串数组
+// func GoStrings(argc C.int, argv **C.char) []string {
+
+// 	length := int(argc)
+// 	tmpslice := (*[1 << 30]*C.char)(unsafe.Pointer(argv))[:length:length]
+// 	gostrings := make([]string, length)
+// 	for i, s := range tmpslice {
+// 		gostrings[i] = C.GoString(s)
+// 	}
+// 	return gostrings
+// }
