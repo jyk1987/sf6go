@@ -8,6 +8,7 @@ import "C"
 
 import (
 	"log"
+	"reflect"
 	"sync"
 	"time"
 	"unsafe"
@@ -27,10 +28,20 @@ func NewFaceDetector(model string) *FaceDetector {
 	}
 }
 
-func (s *FaceDetector) detect(imageData *SeetaImageData) {
-	var result = C.detect(s.ptr, *imageData.ptr)
-	// TODO: 解析返回结构
-	log.Println(result)
+func (s *FaceDetector) Detect(imageData *SeetaImageData) []SeetaFaceInfo {
+	var result C.struct_SeetaFaceInfoArray = C.detect(s.ptr, *imageData.ptr)
+	var clist []C.struct_SeetaFaceInfo
+	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(&clist))
+	arrayLen := int(result.size)
+	sliceHeader.Cap = arrayLen
+	sliceHeader.Len = arrayLen
+	sliceHeader.Data = uintptr(unsafe.Pointer(result.data))
+
+	faceInfoList := make([]SeetaFaceInfo, arrayLen)
+	for i := 0; i < arrayLen; i++ {
+		faceInfoList[i] = NewSeetaFaceInfo(clist[i])
+	}
+	return faceInfoList
 }
 
 func (s *FaceDetector) Close() {
@@ -56,10 +67,10 @@ func TestFaceDetector() {
 		go func() {
 			fd := NewFaceDetector(model)
 			defer fd.Close()
-			for j := 0; j < 1000; j++ {
+			for j := 0; j < 1; j++ {
 				start := time.Now()
-				fd.detect(imageData)
-				log.Println("耗时:", time.Since(start))
+				faces := fd.Detect(imageData)
+				log.Println("检测人脸", len(faces), "耗时:", time.Since(start))
 			}
 			wait.Done()
 		}()

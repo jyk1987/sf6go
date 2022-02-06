@@ -4,6 +4,7 @@ package sf6go
 // #cgo LDFLAGS: -L./lib -ltennis -lSeetaAuthorize -lSeetaFaceDetector600
 // #include <stdlib.h>
 // #include "CStruct.h"
+// #include "CFaceInfo.h"
 import "C"
 import (
 	"log"
@@ -67,6 +68,41 @@ func NewSeetaImageData(width, height, channels int) *SeetaImageData {
 			height:   C.int(height),
 			channels: C.int(channels),
 		},
+	}
+}
+
+type SeetaRect struct {
+	ptr C.SeetaRect
+}
+
+func newSeetaRect(seetaRect C.SeetaRect) SeetaRect {
+	return SeetaRect{
+		ptr: seetaRect,
+	}
+}
+
+func (s *SeetaRect) GetX() int {
+	return int(s.ptr.x)
+}
+func (s *SeetaRect) GetY() int {
+	return int(s.ptr.y)
+}
+func (s *SeetaRect) GetWidth() int {
+	return int(s.ptr.width)
+}
+func (s *SeetaRect) GetHeight() int {
+	return int(s.ptr.height)
+}
+
+type SeetaFaceInfo struct {
+	Postion SeetaRect
+	Score   float32
+}
+
+func NewSeetaFaceInfo(seetaFaceInfo C.struct_SeetaFaceInfo) SeetaFaceInfo {
+	return SeetaFaceInfo{
+		Postion: newSeetaRect(seetaFaceInfo.pos),
+		Score:   float32(seetaFaceInfo.score),
 	}
 }
 
