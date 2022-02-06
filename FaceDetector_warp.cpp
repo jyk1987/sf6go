@@ -8,12 +8,17 @@
 
 facedetector *newFaceDetector(char *model)
 {
+    // 分配一个人脸识别器结构内存
     facedetector *fd = (facedetector *)calloc(1, sizeof(facedetector));
     try
     {
+        // 声明模型配置
         seeta::ModelSetting setting;
+        // 增加模型路径
         setting.append(model);
+        // 构造一个人脸识别器C++对象
         seeta::FaceDetector *cppfd = new seeta::FaceDetector(setting);
+        // 保存人脸识别其对象指针
         fd->cls = (void *)cppfd;
     }
     catch (const std::exception &e)
@@ -29,6 +34,7 @@ SeetaFaceInfoArray detect(facedetector *fd, SeetaImageData image)
     return cls->detect(image);
 }
 
+// 释放人脸识别器结构和保存的C++对象的内存
 void facedetector_free(facedetector *fd)
 {
     if (fd)
