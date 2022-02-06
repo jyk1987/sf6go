@@ -1,5 +1,5 @@
 #include "FaceDetector.h"
-#include "FaceDetector.c.h"
+#include "FaceDetector_warp.h"
 
 #include <iostream>
 #include <vector>
