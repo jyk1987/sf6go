@@ -15,6 +15,17 @@ import (
 	"gocv.io/x/gocv"
 )
 
+type FaceDetectorProperty int
+
+const (
+	PROPERTY_MIN_FACE_SIZE    FaceDetectorProperty = 0
+	PROPERTY_THRESHOLD        FaceDetectorProperty = 1
+	PROPERTY_MAX_IMAGE_WIDTH  FaceDetectorProperty = 2
+	PROPERTY_MAX_IMAGE_HEIGHT FaceDetectorProperty = 3
+	PROPERTY_NUMBER_THREADS   FaceDetectorProperty = 4
+	PROPERTY_ARM_CPU_MODE     FaceDetectorProperty = 0x101
+)
+
 type FaceDetector struct {
 	ptr *C.struct_facedetector
 }
@@ -27,8 +38,12 @@ func NewFaceDetector(model string) *FaceDetector {
 	}
 }
 
+func (s *FaceDetector) SetProperty(property FaceDetectorProperty, value float64) {
+	C.facedetector_setProperty(s.ptr, C.int(property), C.double(value))
+}
+
 func (s *FaceDetector) Detect(imageData *SeetaImageData) []SeetaFaceInfo {
-	var result C.struct_SeetaFaceInfoArray = C.detect(s.ptr, imageData.ptr)
+	var result C.struct_SeetaFaceInfoArray = C.facedetector_detect(s.ptr, imageData.ptr)
 	var clist []C.struct_SeetaFaceInfo
 	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(&clist))
 	arrayLen := int(result.size)
@@ -52,6 +67,7 @@ func TestFaceDetector() {
 	imageChan := make(chan *SeetaImageData, 2)
 	var work = func() {
 		fd := NewFaceDetector(model)
+		fd.SetProperty(PROPERTY_NUMBER_THREADS, 2)
 		defer fd.Close()
 		for {
 
@@ -74,7 +90,7 @@ func TestFaceDetector() {
 	go work()
 	// go work()
 	begin := time.Now()
-	count := 10000000
+	count := 100
 	for j := 0; j < count; j++ {
 		img := gocv.IMRead("duo6.jpeg", gocv.IMReadColor)
 		imageData := NewSeetaImageData(img.Cols(), img.Rows(), img.Channels())
