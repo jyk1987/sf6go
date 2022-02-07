@@ -1,6 +1,7 @@
 package sf6go
 
 // #cgo CXXFLAGS: -std=c++1z -Wall -O3 -DNDEBUG -march=native
+// #cgo LDFLAGS: -L./lib -ltennis -lSeetaAuthorize
 // #include <stdlib.h>
 // #include "CStruct.h"
 // #include "CFaceInfo.h"
