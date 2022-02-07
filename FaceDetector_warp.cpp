@@ -41,6 +41,11 @@ void facedetector_setProperty(facedetector *fd, int property, double value)
     cls->set(seeta::FaceDetector::Property(property), value);
 }
 
+double facedetector_getProperty(facedetector *fd, int property){
+    seeta::FaceDetector *cls = (seeta::FaceDetector *)fd->cls;
+    return cls->get(seeta::FaceDetector::Property(property));
+}
+
 // 释放人脸识别器结构和保存的C++对象的内存
 void facedetector_free(facedetector *fd)
 {

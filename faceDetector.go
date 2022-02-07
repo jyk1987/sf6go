@@ -18,12 +18,12 @@ import (
 type FaceDetectorProperty int
 
 const (
-	PROPERTY_MIN_FACE_SIZE    FaceDetectorProperty = 0
-	PROPERTY_THRESHOLD        FaceDetectorProperty = 1
-	PROPERTY_MAX_IMAGE_WIDTH  FaceDetectorProperty = 2
-	PROPERTY_MAX_IMAGE_HEIGHT FaceDetectorProperty = 3
-	PROPERTY_NUMBER_THREADS   FaceDetectorProperty = 4
-	PROPERTY_ARM_CPU_MODE     FaceDetectorProperty = 0x101
+	FaceDetector_PROPERTY_MIN_FACE_SIZE    FaceDetectorProperty = 0
+	FaceDetector_PROPERTY_THRESHOLD        FaceDetectorProperty = 1
+	FaceDetector_PROPERTY_MAX_IMAGE_WIDTH  FaceDetectorProperty = 2
+	FaceDetector_PROPERTY_MAX_IMAGE_HEIGHT FaceDetectorProperty = 3
+	FaceDetector_PROPERTY_NUMBER_THREADS   FaceDetectorProperty = 4
+	FaceDetector_PROPERTY_ARM_CPU_MODE     FaceDetectorProperty = 0x101
 )
 
 type FaceDetector struct {
@@ -40,6 +40,10 @@ func NewFaceDetector(model string) *FaceDetector {
 
 func (s *FaceDetector) SetProperty(property FaceDetectorProperty, value float64) {
 	C.facedetector_setProperty(s.ptr, C.int(property), C.double(value))
+}
+
+func (s *FaceDetector) GetProperty(property FaceDetectorProperty) float64 {
+	return float64(C.facedetector_getProperty(s.ptr, C.int(property)))
 }
 
 func (s *FaceDetector) Detect(imageData *SeetaImageData) []SeetaFaceInfo {
@@ -67,7 +71,8 @@ func TestFaceDetector() {
 	imageChan := make(chan *SeetaImageData, 2)
 	var work = func() {
 		fd := NewFaceDetector(model)
-		fd.SetProperty(PROPERTY_NUMBER_THREADS, 2)
+		fd.SetProperty(FaceDetector_PROPERTY_NUMBER_THREADS, 2)
+		// log.Println(fd.GetProperty(FaceDetector_PROPERTY_MIN_FACE_SIZE))
 		defer fd.Close()
 		for {
 

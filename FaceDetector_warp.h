@@ -21,6 +21,8 @@ extern "C"
 
     void facedetector_setProperty(facedetector *fd, int property, double value);
 
+    double facedetector_getProperty(facedetector *fd, int property);
+
 #ifdef __cplusplus
 }
 #endif
