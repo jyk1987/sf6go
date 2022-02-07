@@ -9,7 +9,6 @@ import "C"
 import (
 	"log"
 	"reflect"
-	"sync"
 	"time"
 	"unsafe"
 
@@ -29,7 +28,7 @@ func NewFaceDetector(model string) *FaceDetector {
 }
 
 func (s *FaceDetector) Detect(imageData *SeetaImageData) []SeetaFaceInfo {
-	var result C.struct_SeetaFaceInfoArray = C.detect(s.ptr, *imageData.ptr)
+	var result C.struct_SeetaFaceInfoArray = C.detect(s.ptr, imageData.ptr)
 	var clist []C.struct_SeetaFaceInfo
 	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(&clist))
 	arrayLen := int(result.size)
@@ -50,31 +49,43 @@ func (s *FaceDetector) Close() {
 
 func TestFaceDetector() {
 	model := "/var/sf6/models/face_detector.csta"
+	imageChan := make(chan *SeetaImageData, 2)
+	var work = func() {
+		fd := NewFaceDetector(model)
+		defer fd.Close()
+		for {
 
-	img := gocv.IMRead("duo6.jpeg", gocv.IMReadColor)
-	defer img.Close()
-	imageData := NewSeetaImageData(img.Cols(), img.Rows(), img.Channels())
-	defer imageData.Close()
-	err := imageData.SetMat(&img)
-	if err != nil {
-		log.Panic(err)
+			img := <-imageChan
+			start := time.Now()
+			faces := fd.Detect(img)
+			log.Println("检测人脸", len(faces), "耗时:", time.Since(start))
+		}
 	}
-
-	var wait sync.WaitGroup
-
-	for i := 0; i < 1; i++ {
-		wait.Add(1)
-		go func() {
-			fd := NewFaceDetector(model)
-			defer fd.Close()
-			for j := 0; j < 1; j++ {
-				start := time.Now()
-				faces := fd.Detect(imageData)
-				log.Println("检测人脸", len(faces), "耗时:", time.Since(start))
-			}
-			wait.Done()
-		}()
+	/*
+		2个识别器，每个识别器1线程,总线程数2，帧率29.4
+		2个识别器，每个识别器2线程,总线程数4，帧率30.3
+		3个识别器，每个识别器1线程,总线程数3，帧率32.2
+		3个识别器，每个识别器2线程,总线程数6，帧率32.2
+		总线程数大于4后有可能长时间高密度工作后造成识别器资源抢夺，造成效能明显下降，
+		性能利用率最高是3识别器，每个识别器单线程运行，
+		最省资源的是2个识别器，每个识别器单线程运行，但是2*1的方式单帧处理延迟最小，资源占用最小。
+	*/
+	go work()
+	go work()
+	// go work()
+	begin := time.Now()
+	count := 10000000
+	for j := 0; j < count; j++ {
+		img := gocv.IMRead("duo6.jpeg", gocv.IMReadColor)
+		imageData := NewSeetaImageData(img.Cols(), img.Rows(), img.Channels())
+		err := imageData.SetMat(&img)
+		img.Close()
+		if err != nil {
+			log.Panic(err)
+		}
+		imageChan <- imageData
 	}
-	wait.Wait()
+	mscount := time.Now().UnixMilli()
+	log.Println("处理画面", count, "个,用时", time.Since(begin), "fps:", float32(1000)/float32((mscount-begin.UnixMilli())/int64(count)))
 
 }

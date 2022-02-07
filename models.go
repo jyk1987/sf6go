@@ -1,7 +1,6 @@
 package sf6go
 
 // #cgo CXXFLAGS: -std=c++1z -Wall -O3 -DNDEBUG -march=native
-// #cgo LDFLAGS: -L./lib -ltennis -lSeetaAuthorize -lSeetaFaceDetector600
 // #include <stdlib.h>
 // #include "CStruct.h"
 // #include "CFaceInfo.h"
@@ -14,7 +13,7 @@ import (
 
 // SeetaImageData 图像数据结构
 type SeetaImageData struct {
-	ptr *C.struct_SeetaImageData
+	ptr C.struct_SeetaImageData
 }
 
 func (s *SeetaImageData) GetWidth() int {
@@ -47,15 +46,14 @@ func (s *SeetaImageData) SetMat(mat *gocv.Mat) error {
 	}
 	cdata := make([]C.uchar, len(data))
 	for i, v := range data {
-
 		cdata[i] = C.uchar(v)
-		// log.Println(cdata[i], ":", v)
 	}
 	s.ptr.data = &cdata[0]
 	return nil
 }
 func (s *SeetaImageData) Close() {
-	// C.free(unsafe.Pointer(s.ptr))
+	// C.free(unsafe.Pointer(&s.cdata[0]))
+	// C.free(unsafe.Pointer(&s.ptr))
 	// C.free(unsafe.Pointer(&s.ptr.width))
 	// C.free(unsafe.Pointer(&s.ptr.height))
 	// C.free(unsafe.Pointer(&s.ptr.channels))
@@ -63,7 +61,7 @@ func (s *SeetaImageData) Close() {
 
 func NewSeetaImageData(width, height, channels int) *SeetaImageData {
 	return &SeetaImageData{
-		ptr: &C.struct_SeetaImageData{
+		ptr: C.struct_SeetaImageData{
 			width:    C.int(width),
 			height:   C.int(height),
 			channels: C.int(channels),

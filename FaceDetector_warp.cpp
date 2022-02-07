@@ -14,10 +14,13 @@ facedetector *newFaceDetector(char *model)
     {
         // 声明模型配置
         seeta::ModelSetting setting;
+        setting.device = SeetaDevice::SEETA_DEVICE_CPU;
         // 增加模型路径
         setting.append(model);
         // 构造一个人脸识别器C++对象
         seeta::FaceDetector *cppfd = new seeta::FaceDetector(setting);
+        // 设置识别器使用的线程数
+        cppfd->set(seeta::FaceDetector::PROPERTY_NUMBER_THREADS,1);
         // 保存人脸识别其对象指针
         fd->cls = (void *)cppfd;
     }
