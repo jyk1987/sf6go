@@ -3,11 +3,12 @@
 
 #include <iostream>
 
-facelandmarker *newFaceLandmarker(char *model){
+facelandmarker *newFaceLandmarker(char *model)
+{
     facelandmarker *fl = (facelandmarker *)calloc(1, sizeof(facelandmarker));
     try
     {
-         // 声明模型配置
+        // 声明模型配置
         seeta::ModelSetting setting;
         setting.device = SeetaDevice::SEETA_DEVICE_CPU;
         // 增加模型路径
@@ -17,15 +18,16 @@ facelandmarker *newFaceLandmarker(char *model){
         // 保存人脸识别器对象指针
         fl->cls = (void *)cppfl;
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }
     return fl;
 }
 
-void facelandmarker_free(facelandmarker *fl){
-     if (fl)
+void facelandmarker_free(facelandmarker *fl)
+{
+    if (fl)
     {
         if (fl->cls)
         {

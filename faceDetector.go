@@ -71,7 +71,7 @@ func TestFaceDetector() {
 	imageChan := make(chan *SeetaImageData, 2)
 	var work = func() {
 		fd := NewFaceDetector(model)
-		fd.SetProperty(FaceDetector_PROPERTY_NUMBER_THREADS, 2)
+		fd.SetProperty(FaceDetector_PROPERTY_NUMBER_THREADS, 1)
 		// log.Println(fd.GetProperty(FaceDetector_PROPERTY_MIN_FACE_SIZE))
 		defer fd.Close()
 		for {
