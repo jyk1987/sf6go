@@ -13,6 +13,7 @@ extern "C"
 
     facelandmarker *newFaceLandmarker(char *model);
     void facelandmarker_free(facelandmarker *fl);
+    int facelandmarker_number(facelandmarker *fl);
 
 #ifdef __cplusplus
 }

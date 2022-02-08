@@ -25,6 +25,12 @@ facelandmarker *newFaceLandmarker(char *model)
     return fl;
 }
 
+int facelandmarker_number(facelandmarker *fl)
+{
+    seeta::FaceLandmarker *cls = (seeta::FaceLandmarker *)fl->cls;
+    return cls->number();
+}
+
 void facelandmarker_free(facelandmarker *fl)
 {
     if (fl)
