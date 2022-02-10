@@ -95,7 +95,7 @@ func TestFaceDetector() {
 	go work()
 	// go work()
 	begin := time.Now()
-	count := 100
+	count := 1000
 	for j := 0; j < count; j++ {
 		img := gocv.IMRead("duo6.jpeg", gocv.IMReadColor)
 		imageData := NewSeetaImageData(img.Cols(), img.Rows(), img.Channels())
