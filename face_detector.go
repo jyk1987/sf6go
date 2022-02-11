@@ -30,12 +30,15 @@ type FaceDetector struct {
 	ptr *C.struct_facedetector
 }
 
+// NewFaceDetector 创建一个人脸检测器
 func NewFaceDetector(model string) *FaceDetector {
 	cs := C.CString(model)
 	defer C.free(unsafe.Pointer(cs))
-	return &FaceDetector{
+	fd := &FaceDetector{
 		ptr: C.faceDetector_new(cs),
 	}
+	fd.SetProperty(FaceDetector_PROPERTY_NUMBER_THREADS, 1)
+	return fd
 }
 
 func (s *FaceDetector) SetProperty(property FaceDetectorProperty, value float64) {
@@ -46,8 +49,8 @@ func (s *FaceDetector) GetProperty(property FaceDetectorProperty) float64 {
 	return float64(C.facedetector_getProperty(s.ptr, C.int(property)))
 }
 
-func (s *FaceDetector) Detect(imageData *SeetaImageData) []SeetaFaceInfo {
-	var result C.struct_SeetaFaceInfoArray = C.facedetector_detect(s.ptr, imageData.ptr)
+func (s *FaceDetector) Detect(imageData *SeetaImageData) []*SeetaFaceInfo {
+	var result C.struct_SeetaFaceInfoArray = C.facedetector_detect(s.ptr, imageData.getCStruct())
 	var clist []C.struct_SeetaFaceInfo
 	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(&clist))
 	arrayLen := int(result.size)
@@ -55,7 +58,7 @@ func (s *FaceDetector) Detect(imageData *SeetaImageData) []SeetaFaceInfo {
 	sliceHeader.Len = arrayLen
 	sliceHeader.Data = uintptr(unsafe.Pointer(result.data))
 
-	faceInfoList := make([]SeetaFaceInfo, arrayLen)
+	faceInfoList := make([]*SeetaFaceInfo, arrayLen)
 	for i := 0; i < arrayLen; i++ {
 		faceInfoList[i] = NewSeetaFaceInfo(clist[i])
 	}

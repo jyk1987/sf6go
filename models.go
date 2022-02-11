@@ -14,48 +14,43 @@ import (
 
 // SeetaImageData 图像数据结构
 type SeetaImageData struct {
-	ptr   C.struct_SeetaImageData
+	_ptr  C.struct_SeetaImageData
 	cdata []C.uchar //此数据最终将指针交给c处理，此数据时为了方式数据逃逸，方便go释放内存
 }
 
 func (s *SeetaImageData) GetWidth() int {
-	return int(s.ptr.width)
-}
-func (s *SeetaImageData) SetWidth(width int) {
-	s.ptr.width = C.int(width)
+	return int(s._ptr.width)
 }
 func (s *SeetaImageData) GetHeight() int {
-	return int(s.ptr.height)
-}
-func (s *SeetaImageData) SetHeight(height int) {
-	s.ptr.height = C.int(height)
+	return int(s._ptr.height)
 }
 func (s *SeetaImageData) GetChannels() int {
-	return int(s.ptr.channels)
-}
-func (s *SeetaImageData) SetChannels(channels int) {
-	s.ptr.channels = C.int(channels)
+	return int(s._ptr.channels)
 }
 
 func (s *SeetaImageData) GetData() []uint8 {
 	// TODO: 完成数据获取
 	return nil
 }
+
+func (s *SeetaImageData) getCStruct() C.struct_SeetaImageData {
+	s.Reset()
+	return s._ptr
+}
+
 func (s *SeetaImageData) SetMat(mat *gocv.Mat) error {
 	data, err := mat.DataPtrUint8()
 	if err != nil {
 		return err
 	}
-	s.cdata = make([]C.uchar, len(data))
 	for i, v := range data {
 		s.cdata[i] = C.uchar(v)
 	}
-	s.ptr.data = &s.cdata[0]
 	return nil
 }
 
 func (s *SeetaImageData) Reset() {
-	s.ptr.data = &s.cdata[0]
+	s._ptr.data = &s.cdata[0]
 }
 
 func (s *SeetaImageData) Close() {
@@ -67,46 +62,53 @@ func (s *SeetaImageData) Close() {
 }
 
 func NewSeetaImageData(width, height, channels int) *SeetaImageData {
-	return &SeetaImageData{
-		ptr: C.struct_SeetaImageData{
+	imageData := &SeetaImageData{
+		cdata: make([]C.uchar, width*height*channels),
+		_ptr: C.struct_SeetaImageData{
 			width:    C.int(width),
 			height:   C.int(height),
 			channels: C.int(channels),
 		},
 	}
+	imageData._ptr.data = &imageData.cdata[0]
+	return imageData
 }
 
 // SeetaRect 人脸位置信息
 type SeetaRect struct {
-	ptr C.SeetaRect
+	_ptr C.struct_SeetaRect
 }
 
-func newSeetaRect(seetaRect C.SeetaRect) SeetaRect {
-	return SeetaRect{
-		ptr: seetaRect,
+func newSeetaRect(seetaRect C.struct_SeetaRect) *SeetaRect {
+	return &SeetaRect{
+		_ptr: seetaRect,
 	}
 }
 
+func (s *SeetaRect) getCStruct() C.struct_SeetaRect {
+	return s._ptr
+}
+
 func (s *SeetaRect) GetX() int {
-	return int(s.ptr.x)
+	return int(s._ptr.x)
 }
 func (s *SeetaRect) GetY() int {
-	return int(s.ptr.y)
+	return int(s._ptr.y)
 }
 func (s *SeetaRect) GetWidth() int {
-	return int(s.ptr.width)
+	return int(s._ptr.width)
 }
 func (s *SeetaRect) GetHeight() int {
-	return int(s.ptr.height)
+	return int(s._ptr.height)
 }
 
 type SeetaFaceInfo struct {
-	Postion SeetaRect
+	Postion *SeetaRect
 	Score   float32
 }
 
-func NewSeetaFaceInfo(seetaFaceInfo C.struct_SeetaFaceInfo) SeetaFaceInfo {
-	return SeetaFaceInfo{
+func NewSeetaFaceInfo(seetaFaceInfo C.struct_SeetaFaceInfo) *SeetaFaceInfo {
+	return &SeetaFaceInfo{
 		Postion: newSeetaRect(seetaFaceInfo.pos),
 		Score:   float32(seetaFaceInfo.score),
 	}
@@ -125,6 +127,10 @@ func NewSeetaPointInfo(pointCount int) *SeetaPointInfo {
 		Points:     make([]C.struct_SeetaPointF, pointCount),
 		Masks:      make([]bool, pointCount),
 	}
+}
+
+func (s *SeetaPointInfo) getCSeetaPointFArray() *C.struct_SeetaPointF {
+	return &s.Points[0]
 }
 
 // SeetaModelSetting 模型配置数据结构
@@ -151,7 +157,7 @@ func NewSeetaPointInfo(pointCount int) *SeetaPointInfo {
 func TestCStruct() {
 	a := NewSeetaImageData(320, 160, 3)
 	defer a.Close()
-	log.Println(a.ptr)
+	log.Println(a.getCStruct())
 
 }
 

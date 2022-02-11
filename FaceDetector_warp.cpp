@@ -29,7 +29,7 @@ facedetector *faceDetector_new(char *model)
     return fd;
 }
 
-SeetaFaceInfoArray facedetector_detect(facedetector *fd, SeetaImageData image)
+SeetaFaceInfoArray facedetector_detect(facedetector *fd, const SeetaImageData image)
 {
     seeta::FaceDetector *cls = (seeta::FaceDetector *)fd->cls;
     return cls->detect(image);
