@@ -6,7 +6,7 @@
 
 // using namespace seeta::SEETA_FACE_DETECTOR_NAMESPACE_VERSION;
 
-facedetector *newFaceDetector(char *model)
+facedetector *faceDetector_new(char *model)
 {
     // 分配一个人脸识别器结构内存
     facedetector *fd = (facedetector *)calloc(1, sizeof(facedetector));
@@ -41,7 +41,8 @@ void facedetector_setProperty(facedetector *fd, int property, double value)
     cls->set(seeta::FaceDetector::Property(property), value);
 }
 
-double facedetector_getProperty(facedetector *fd, int property){
+double facedetector_getProperty(facedetector *fd, int property)
+{
     seeta::FaceDetector *cls = (seeta::FaceDetector *)fd->cls;
     return cls->get(seeta::FaceDetector::Property(property));
 }

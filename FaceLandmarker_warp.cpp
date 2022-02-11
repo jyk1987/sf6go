@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-facelandmarker *newFaceLandmarker(char *model)
+facelandmarker *faceLandmarker_new(char *model)
 {
     facelandmarker *fl = (facelandmarker *)calloc(1, sizeof(facelandmarker));
     try

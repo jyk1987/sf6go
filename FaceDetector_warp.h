@@ -13,7 +13,7 @@ extern "C"
         void *cls;
     } facedetector;
 
-    facedetector *newFaceDetector(char *model);
+    facedetector *faceDetector_new(char *model);
 
     SeetaFaceInfoArray facedetector_detect(facedetector *fd, SeetaImageData image);
 

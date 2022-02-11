@@ -34,7 +34,7 @@ func NewFaceDetector(model string) *FaceDetector {
 	cs := C.CString(model)
 	defer C.free(unsafe.Pointer(cs))
 	return &FaceDetector{
-		ptr: C.newFaceDetector(cs),
+		ptr: C.faceDetector_new(cs),
 	}
 }
 
