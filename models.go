@@ -1,7 +1,7 @@
 package sf6go
 
 // #cgo CXXFLAGS: -std=c++1z -Wall -O3 -DNDEBUG -march=native
-// #cgo LDFLAGS: -L./lib -ltennis -lSeetaAuthorize
+// #cgo LDFLAGS: -L${SRCDIR}/lib -ltennis -lSeetaAuthorize
 // #include <stdlib.h>
 // #include "CStruct.h"
 // #include "CFaceInfo.h"
@@ -76,6 +76,7 @@ func NewSeetaImageData(width, height, channels int) *SeetaImageData {
 	}
 }
 
+// SeetaRect 人脸位置信息
 type SeetaRect struct {
 	ptr C.SeetaRect
 }
@@ -108,6 +109,21 @@ func NewSeetaFaceInfo(seetaFaceInfo C.struct_SeetaFaceInfo) SeetaFaceInfo {
 	return SeetaFaceInfo{
 		Postion: newSeetaRect(seetaFaceInfo.pos),
 		Score:   float32(seetaFaceInfo.score),
+	}
+}
+
+// SeetaPointInfo 人脸特征点信息
+type SeetaPointInfo struct {
+	PointCount int // 特征点数
+	Points     []C.struct_SeetaPointF
+	Masks      []bool
+}
+
+func NewSeetaPointInfo(pointCount int) *SeetaPointInfo {
+	return &SeetaPointInfo{
+		PointCount: pointCount,
+		Points:     make([]C.struct_SeetaPointF, pointCount),
+		Masks:      make([]bool, pointCount),
 	}
 }
 
