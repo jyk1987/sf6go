@@ -68,7 +68,8 @@ func (s *FaceDetector) Close() {
 
 func TestFaceDetector() {
 	model := "/var/sf6/models/face_detector.csta"
-	imageChan := make(chan *SeetaImageData, 2)
+	icount := 4
+	imageChan := make(chan *SeetaImageData, icount)
 	var work = func() {
 		fd := NewFaceDetector(model)
 		fd.SetProperty(FaceDetector_PROPERTY_NUMBER_THREADS, 1)
@@ -91,11 +92,11 @@ func TestFaceDetector() {
 		性能利用率最高是3识别器，每个识别器单线程运行，
 		最省资源的是2个识别器，每个识别器单线程运行，但是2*1的方式单帧处理延迟最小，资源占用最小。
 	*/
-	go work()
-	go work()
-	// go work()
+	for i := 0; i < icount; i++ {
+		go work()
+	}
 	begin := time.Now()
-	count := 1000
+	count := 100
 	for j := 0; j < count; j++ {
 		img := gocv.IMRead("duo6.jpeg", gocv.IMReadColor)
 		imageData := NewSeetaImageData(img.Cols(), img.Rows(), img.Channels())

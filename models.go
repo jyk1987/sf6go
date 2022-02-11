@@ -14,7 +14,8 @@ import (
 
 // SeetaImageData 图像数据结构
 type SeetaImageData struct {
-	ptr C.struct_SeetaImageData
+	ptr   C.struct_SeetaImageData
+	cdata []C.uchar //此数据最终将指针交给c处理，此数据时为了方式数据逃逸，方便go释放内存
 }
 
 func (s *SeetaImageData) GetWidth() int {
@@ -45,15 +46,20 @@ func (s *SeetaImageData) SetMat(mat *gocv.Mat) error {
 	if err != nil {
 		return err
 	}
-	cdata := make([]C.uchar, len(data))
+	s.cdata = make([]C.uchar, len(data))
 	for i, v := range data {
-		cdata[i] = C.uchar(v)
+		s.cdata[i] = C.uchar(v)
 	}
-	s.ptr.data = &cdata[0]
+	s.ptr.data = &s.cdata[0]
 	return nil
 }
+
+func (s *SeetaImageData) Reset() {
+	s.ptr.data = &s.cdata[0]
+}
+
 func (s *SeetaImageData) Close() {
-	// C.free(unsafe.Pointer(&s.cdata[0]))
+	// C.free(unsafe.Pointer(&s.cdata))
 	// C.free(unsafe.Pointer(&s.ptr))
 	// C.free(unsafe.Pointer(&s.ptr.width))
 	// C.free(unsafe.Pointer(&s.ptr.height))
