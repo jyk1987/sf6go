@@ -11,8 +11,6 @@ import (
 	"reflect"
 	"time"
 	"unsafe"
-
-	"gocv.io/x/gocv"
 )
 
 type FaceDetectorProperty int
@@ -101,14 +99,10 @@ func TestFaceDetector() {
 	begin := time.Now()
 	count := 100
 	for j := 0; j < count; j++ {
-		img := gocv.IMRead("duo6.jpeg", gocv.IMReadColor)
-		imageData := NewSeetaImageData(img.Cols(), img.Rows(), img.Channels())
-		data, err := img.DataPtrUint8()
-		img.Close()
+		imageData, err := NewSeetaImageDataFromFile("duo6.jpeg")
 		if err != nil {
-			log.Panic("获取图片数据出错")
+			log.Panic(err)
 		}
-		err = imageData.SetUint8(data)
 
 		if err != nil {
 			log.Panic(err)

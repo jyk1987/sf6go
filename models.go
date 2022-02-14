@@ -7,8 +7,15 @@ package sf6go
 // #include "CFaceInfo.h"
 import "C"
 import (
+	"bytes"
+	"encoding/base64"
 	"fmt"
+	"image"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"log"
+	"os"
 )
 
 // SeetaImageData 图像数据结构
@@ -28,8 +35,12 @@ func (s *SeetaImageData) GetChannels() int {
 }
 
 func (s *SeetaImageData) GetData() []uint8 {
-	// TODO: 完成数据获取
-	return nil
+	size := len(s.cdata)
+	data := make([]uint8, size)
+	for i := 0; i < size; i++ {
+		data[i] = uint8(s.cdata[i])
+	}
+	return data
 }
 
 func (s *SeetaImageData) getCStruct() C.struct_SeetaImageData {
@@ -59,6 +70,8 @@ func (s *SeetaImageData) Close() {
 	// C.free(unsafe.Pointer(&s.ptr.channels))
 }
 
+// NewSeetaImageData 创建一个sf6图片（不包含数据）
+// 创建后需要通过SetUint8设置数据，一般用于opencv的mat转换
 func NewSeetaImageData(width, height, channels int) *SeetaImageData {
 	imageData := &SeetaImageData{
 		cdata: make([]C.uchar, width*height*channels),
@@ -68,6 +81,68 @@ func NewSeetaImageData(width, height, channels int) *SeetaImageData {
 			channels: C.int(channels),
 		},
 	}
+	imageData._ptr.data = &imageData.cdata[0]
+	return imageData
+}
+
+// NewSeetaImageDataFromBase64 通过base64图片数据创建sf6图片数据
+func NewSeetaImageDataFromBase64(data string) (*SeetaImageData, error) {
+
+	buffer, err := base64.StdEncoding.DecodeString(data)
+	if err != nil {
+		return nil, err
+	}
+	reader := bytes.NewReader(buffer)
+
+	img, foramt, err := image.Decode(reader)
+	if err != nil {
+		log.Println(foramt)
+		return nil, err
+	}
+	return NewSeetaImageDataFromImage(img), nil
+}
+
+// NewSeetaImageDataFromFile 根据文件路径创建sf6图片数据
+func NewSeetaImageDataFromFile(filePath string) (*SeetaImageData, error) {
+	file, err := os.Open(filePath)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+	img, foramt, err := image.Decode(file)
+	if err != nil {
+		log.Println(foramt)
+		return nil, err
+	}
+	return NewSeetaImageDataFromImage(img), nil
+}
+
+// NewSeetaImageDataFromImage 根据go 内置image数据创建sf6图片数据
+func NewSeetaImageDataFromImage(img image.Image) *SeetaImageData {
+	rect := img.Bounds()
+	width := rect.Dx()
+	height := rect.Dy()
+	channels := 3
+
+	imageData := &SeetaImageData{
+		cdata: make([]C.uchar, width*height*channels),
+		_ptr: C.struct_SeetaImageData{
+			width:    C.int(width),
+			height:   C.int(height),
+			channels: C.int(channels),
+		},
+	}
+	for x := 0; x < width; x++ {
+		for y := 0; y < height; y++ {
+			c := img.At(rect.Min.X+x, rect.Min.Y+y)
+			r, g, b, _ := c.RGBA()
+			offset := y*width*channels + x*channels
+			imageData.cdata[offset] = C.uchar(b >> 8)
+			imageData.cdata[offset+1] = C.uchar(g >> 8)
+			imageData.cdata[offset+2] = C.uchar(r >> 8)
+		}
+	}
+
 	imageData._ptr.data = &imageData.cdata[0]
 	return imageData
 }

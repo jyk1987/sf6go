@@ -1,11 +1,12 @@
 package main
 
 import (
+	"encoding/base64"
+	"io/ioutil"
 	"log"
 	"time"
 
 	"git.gyb3.cn/kuaibang/sf6go"
-	"gocv.io/x/gocv"
 )
 
 func main() {
@@ -16,17 +17,14 @@ func main() {
 	fd := sf6go.NewFaceDetector("/var/sf6/models/face_detector.csta")
 	defer fd.Close()
 
-	img := gocv.IMRead("duo6.jpeg", gocv.IMReadColor)
-	defer img.Close()
-	imageData := sf6go.NewSeetaImageData(img.Cols(), img.Rows(), img.Channels())
-	data, err := img.DataPtrUint8()
+	ff, _ := ioutil.ReadFile("duo6.jpeg")
+	base64Data := base64.StdEncoding.EncodeToString(ff)
+
+	imageData, err := sf6go.NewSeetaImageDataFromBase64(base64Data)
 	if err != nil {
 		log.Panic(err)
 	}
-	err = imageData.SetUint8(data)
-	if err != nil {
-		log.Panic(err)
-	}
+
 	start := time.Now()
 	faces := fd.Detect(imageData)
 	log.Println("检测人脸", len(faces), "耗时:", time.Since(start))
