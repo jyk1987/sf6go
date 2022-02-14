@@ -7,9 +7,8 @@ package sf6go
 // #include "CFaceInfo.h"
 import "C"
 import (
+	"fmt"
 	"log"
-
-	"gocv.io/x/gocv"
 )
 
 // SeetaImageData 图像数据结构
@@ -38,10 +37,9 @@ func (s *SeetaImageData) getCStruct() C.struct_SeetaImageData {
 	return s._ptr
 }
 
-func (s *SeetaImageData) SetMat(mat *gocv.Mat) error {
-	data, err := mat.DataPtrUint8()
-	if err != nil {
-		return err
+func (s *SeetaImageData) SetUint8(data []uint8) error {
+	if len(s.cdata) != len(data) {
+		return fmt.Errorf("设置的数据与初始化的大小不符")
 	}
 	for i, v := range data {
 		s.cdata[i] = C.uchar(v)

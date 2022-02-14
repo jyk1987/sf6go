@@ -103,8 +103,13 @@ func TestFaceDetector() {
 	for j := 0; j < count; j++ {
 		img := gocv.IMRead("duo6.jpeg", gocv.IMReadColor)
 		imageData := NewSeetaImageData(img.Cols(), img.Rows(), img.Channels())
-		err := imageData.SetMat(&img)
+		data, err := img.DataPtrUint8()
 		img.Close()
+		if err != nil {
+			log.Panic("获取图片数据出错")
+		}
+		err = imageData.SetUint8(data)
+
 		if err != nil {
 			log.Panic(err)
 		}
