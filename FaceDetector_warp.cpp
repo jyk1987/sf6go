@@ -56,7 +56,7 @@ void facedetector_free(facedetector *fd)
         {
             seeta::FaceDetector *cls = (seeta::FaceDetector *)fd->cls;
             delete cls;
-            fd->cls = NULL;
+            fd->cls = nullptr;
         }
         free(fd);
     }

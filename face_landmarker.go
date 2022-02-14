@@ -13,6 +13,7 @@ import (
 type FaceLandmarker struct {
 	ptr        *C.struct_facelandmarker
 	PointCount int
+	FaceType   ModelType
 }
 
 var _FaceLandmarker_model = map[ModelType]string{
@@ -27,7 +28,8 @@ func NewFaceLandmarker(modelType ModelType) *FaceLandmarker {
 	cs := C.CString(model)
 	defer C.free(unsafe.Pointer(cs))
 	fl := &FaceLandmarker{
-		ptr: C.faceLandmarker_new(cs),
+		ptr:      C.faceLandmarker_new(cs),
+		FaceType: modelType,
 	}
 	fl.PointCount = fl.number()
 	return fl

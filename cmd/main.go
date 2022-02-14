@@ -35,14 +35,19 @@ func main() {
 	defer fl.Close()
 	fr := sf6go.NewFaceRecognizer(sf6go.ModelType_light)
 	defer fr.Close()
+	fas := sf6go.NewFaceAntiSpoofing_v2()
 	for i := 0; i < len(faces); i++ {
+		postion := faces[i].Postion
 		start = time.Now()
-		pointInfo := fl.Mark(imageData, faces[i].Postion)
+		pointInfo := fl.Mark(imageData, postion)
 		// log.Println(pointInfo)
 		log.Println("特征定位", i, "耗时:", time.Since(start))
 		start = time.Now()
 		success, features := fr.Extract(imageData, pointInfo)
 		log.Println("特征提取", success, len(features), "耗时:", time.Since(start))
+		start = time.Now()
+		status := fas.Predict(imageData, postion, pointInfo)
+		log.Println("活体检测", status, "耗时:", time.Since(start))
 	}
 
 	// log.Println(fr.GetCropFaceWidthV2())

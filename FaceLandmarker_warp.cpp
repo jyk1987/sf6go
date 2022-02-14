@@ -45,7 +45,7 @@ void facelandmarker_free(facelandmarker *fl)
         {
             seeta::FaceLandmarker *cls = (seeta::FaceLandmarker *)fl->cls;
             delete cls;
-            fl->cls = NULL;
+            fl->cls = nullptr;
         }
         free(fl);
     }

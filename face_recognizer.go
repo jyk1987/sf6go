@@ -32,6 +32,7 @@ var _FaceDetector_model = map[ModelType]string{
 type FaceRecognizer struct {
 	ptr         *C.struct_facerecognizer
 	FeatureSize int
+	FaceType    ModelType
 }
 
 // NewFaceRecognizer 创建一个人脸识别器
@@ -40,7 +41,8 @@ func NewFaceRecognizer(modelType ModelType) *FaceRecognizer {
 	cs := C.CString(model)
 	defer C.free(unsafe.Pointer(cs))
 	fr := &FaceRecognizer{
-		ptr: C.facerecognizer_new(cs),
+		ptr:      C.facerecognizer_new(cs),
+		FaceType: modelType,
 	}
 	fr.SetProperty(FaceRecognizer_PROPERTY_NUMBER_THREADS, 1)
 	fr.FeatureSize = fr.getExtractFeatureSize()

@@ -73,7 +73,7 @@ void facerecognizer_free(facerecognizer *fr)
         {
             seeta::FaceRecognizer *cls = (seeta::FaceRecognizer *)fr->cls;
             delete cls;
-            fr->cls = NULL;
+            fr->cls = nullptr;
         }
         free(fr);
     }
