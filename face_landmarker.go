@@ -6,7 +6,7 @@ package sf6go
 // #include "FaceLandmarker_warp.h"
 import "C"
 import (
-	"log"
+	"path/filepath"
 	"unsafe"
 )
 
@@ -15,8 +15,15 @@ type FaceLandmarker struct {
 	PointCount int
 }
 
+var _FaceLandmarker_model = map[ModelType]string{
+	ModelType_default: "face_landmarker_pts68.csta",
+	ModelType_light:   "face_landmarker_pts5.csta",
+	ModelType_mask:    "face_landmarker_mask_pts5.csta",
+}
+
 // NewFaceLandmarker 创建人脸特征定位器
-func NewFaceLandmarker(model string) *FaceLandmarker {
+func NewFaceLandmarker(modelType ModelType) *FaceLandmarker {
+	model := filepath.Join(_model_base_path, _FaceLandmarker_model[modelType])
 	cs := C.CString(model)
 	defer C.free(unsafe.Pointer(cs))
 	fl := &FaceLandmarker{
@@ -44,10 +51,4 @@ func (s *FaceLandmarker) Mark(image *SeetaImageData, postion *SeetaRect) *SeetaP
 
 func (s *FaceLandmarker) Close() {
 	C.facelandmarker_free(s.ptr)
-}
-
-func TestFaceLandmarker() {
-	model := "/var/sf6/models/face_landmarker_pts5.csta"
-	fl := NewFaceLandmarker(model)
-	log.Println(fl.PointCount)
 }

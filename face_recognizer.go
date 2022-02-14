@@ -5,14 +5,29 @@ package sf6go
 // #include <stdlib.h>
 // #include "FaceRecognizer_warp.h"
 import "C"
-import "unsafe"
+import (
+	"path/filepath"
+	"unsafe"
+)
 
 type FaceRecognizerProperty int
 
 const (
-	FaceRecognizer_PROPERTY_NUMBER_THREADS FaceRecognizerProperty = 4
+	FaceRecognizer_PROPERTY_NUMBER_THREADS FaceRecognizerProperty = 4 // 人脸识别其线程数
 	FaceRecognizer_PROPERTY_ARM_CPU_MODE   FaceRecognizerProperty = 5
 )
+
+const (
+	FaceDetector_threshold_default = 0.62 // 默认68点模型对比阈值
+	FaceDetector_threshold_light   = 0.55 // 轻量5点模型对比阈值
+	FaceDetector_threshold_mask    = 0.48 // 口罩5点模型对比阈值
+)
+
+var _FaceDetector_model = map[ModelType]string{
+	ModelType_default: "face_recognizer.csta",
+	ModelType_light:   "face_recognizer_light.csta",
+	ModelType_mask:    "face_recognizer_mask.csta",
+}
 
 type FaceRecognizer struct {
 	ptr         *C.struct_facerecognizer
@@ -20,7 +35,8 @@ type FaceRecognizer struct {
 }
 
 // NewFaceRecognizer 创建一个人脸识别器
-func NewFaceRecognizer(model string) *FaceRecognizer {
+func NewFaceRecognizer(modelType ModelType) *FaceRecognizer {
+	model := filepath.Join(_model_base_path, _FaceDetector_model[modelType])
 	cs := C.CString(model)
 	defer C.free(unsafe.Pointer(cs))
 	fr := &FaceRecognizer{

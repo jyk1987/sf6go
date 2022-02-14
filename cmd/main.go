@@ -14,7 +14,9 @@ func main() {
 	// sf6go.TestFaceDetector()
 	// sf6go.TestFaceLandmarker()
 
-	fd := sf6go.NewFaceDetector("/var/sf6/models/face_detector.csta")
+	sf6go.InitModelPath("/var/sf6/models")
+
+	fd := sf6go.NewFaceDetector()
 	defer fd.Close()
 
 	ff, _ := ioutil.ReadFile("duo6.jpeg")
@@ -29,9 +31,9 @@ func main() {
 	faces := fd.Detect(imageData)
 	log.Println("检测人脸", len(faces), "耗时:", time.Since(start))
 
-	fl := sf6go.NewFaceLandmarker("/var/sf6/models/face_landmarker_pts5.csta")
+	fl := sf6go.NewFaceLandmarker(sf6go.ModelType_light)
 	defer fl.Close()
-	fr := sf6go.NewFaceRecognizer("/var/sf6/models/face_recognizer_light.csta")
+	fr := sf6go.NewFaceRecognizer(sf6go.ModelType_light)
 	defer fr.Close()
 	for i := 0; i < len(faces); i++ {
 		start = time.Now()

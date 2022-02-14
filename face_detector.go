@@ -7,9 +7,8 @@ package sf6go
 import "C"
 
 import (
-	"log"
+	"path/filepath"
 	"reflect"
-	"time"
 	"unsafe"
 )
 
@@ -28,9 +27,13 @@ type FaceDetector struct {
 	ptr *C.struct_facedetector
 }
 
+const (
+	_NewFaceDetector_model = "face_detector.csta"
+)
+
 // NewFaceDetector 创建一个人脸检测器
-func NewFaceDetector(model string) *FaceDetector {
-	cs := C.CString(model)
+func NewFaceDetector() *FaceDetector {
+	cs := C.CString(filepath.Join(_model_base_path, _NewFaceDetector_model))
 	defer C.free(unsafe.Pointer(cs))
 	fd := &FaceDetector{
 		ptr: C.faceDetector_new(cs),
@@ -65,51 +68,4 @@ func (s *FaceDetector) Detect(imageData *SeetaImageData) []*SeetaFaceInfo {
 
 func (s *FaceDetector) Close() {
 	C.facedetector_free(s.ptr)
-}
-
-func TestFaceDetector() {
-	model := "/var/sf6/models/face_detector.csta"
-	icount := 4
-	imageChan := make(chan *SeetaImageData, icount)
-	var work = func() {
-		fd := NewFaceDetector(model)
-		fd.SetProperty(FaceDetector_PROPERTY_NUMBER_THREADS, 1)
-		// log.Println(fd.GetProperty(FaceDetector_PROPERTY_MIN_FACE_SIZE))
-		defer fd.Close()
-		for {
-
-			img := <-imageChan
-			start := time.Now()
-			faces := fd.Detect(img)
-			log.Println("检测人脸", len(faces), "耗时:", time.Since(start))
-		}
-	}
-	/*
-		2个识别器，每个识别器1线程,总线程数2，帧率29.4
-		2个识别器，每个识别器2线程,总线程数4，帧率30.3
-		3个识别器，每个识别器1线程,总线程数3，帧率32.2
-		3个识别器，每个识别器2线程,总线程数6，帧率32.2
-		总线程数大于4后有可能长时间高密度工作后造成识别器资源抢夺，造成效能明显下降，
-		性能利用率最高是3识别器，每个识别器单线程运行，
-		最省资源的是2个识别器，每个识别器单线程运行，但是2*1的方式单帧处理延迟最小，资源占用最小。
-	*/
-	for i := 0; i < icount; i++ {
-		go work()
-	}
-	begin := time.Now()
-	count := 100
-	for j := 0; j < count; j++ {
-		imageData, err := NewSeetaImageDataFromFile("duo6.jpeg")
-		if err != nil {
-			log.Panic(err)
-		}
-
-		if err != nil {
-			log.Panic(err)
-		}
-		imageChan <- imageData
-	}
-	mscount := time.Now().UnixMilli()
-	log.Println("处理画面", count, "个,用时", time.Since(begin), "fps:", float32(1000)/float32((mscount-begin.UnixMilli())/int64(count)))
-
 }

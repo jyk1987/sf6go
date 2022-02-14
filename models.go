@@ -18,6 +18,31 @@ import (
 	"os"
 )
 
+// _model_base_path 模型基础路径
+var _model_base_path string
+
+// 初始化模型目录
+func InitModelPath(path string) error {
+	fi, err := os.Stat(path)
+	if err != nil {
+		return err
+	}
+	if !fi.IsDir() {
+		return fmt.Errorf("%v不是目录", path)
+	}
+	_model_base_path = path
+	return nil
+}
+
+// ModelType 模型类型
+type ModelType uint8
+
+const (
+	ModelType_default ModelType = iota // 默认模型
+	ModelType_light                    // 轻量级模型
+	ModelType_mask                     // 口罩模型
+)
+
 // SeetaImageData 图像数据结构
 type SeetaImageData struct {
 	_ptr  C.struct_SeetaImageData
