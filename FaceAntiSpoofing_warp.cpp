@@ -14,9 +14,9 @@ faceantispoofing *faceantispoofing_new(char *firstModel)
         // 增加模型路径
         setting.append(firstModel);
         // 构造一个人脸识别器C++对象
-        seeta::FaceAntiSpoofing *cppfas = new seeta::FaceAntiSpoofing(setting);
+        seeta::FaceAntiSpoofing *cls = new seeta::FaceAntiSpoofing(setting);
         // 保存人脸识别器对象指针
-        fas->cls = (void *)cppfas;
+        fas->cls = (void *)cls;
     }
     catch (const std::exception &e)
     {
@@ -37,9 +37,9 @@ faceantispoofing *faceantispoofing_new_v2(char *firstModel, char *secondModel)
         setting.append(firstModel);
         setting.append(secondModel);
         // 构造一个人脸识别器C++对象
-        seeta::FaceAntiSpoofing *cppfas = new seeta::FaceAntiSpoofing(setting);
+        seeta::FaceAntiSpoofing *cls = new seeta::FaceAntiSpoofing(setting);
         // 保存人脸识别器对象指针
-        fas->cls = (void *)cppfas;
+        fas->cls = (void *)cls;
     }
     catch (const std::exception &e)
     {

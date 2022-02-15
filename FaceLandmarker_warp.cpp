@@ -14,9 +14,9 @@ facelandmarker *faceLandmarker_new(char *model)
         // 增加模型路径
         setting.append(model);
         // 构造特征检测器C++对象
-        seeta::FaceLandmarker *cppfl = new seeta::FaceLandmarker(setting);
+        seeta::FaceLandmarker *cls = new seeta::FaceLandmarker(setting);
         // 保存人脸识别器对象指针
-        fl->cls = (void *)cppfl;
+        fl->cls = (void *)cls;
     }
     catch (const std::exception &e)
     {

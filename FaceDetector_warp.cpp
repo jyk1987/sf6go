@@ -18,9 +18,9 @@ facedetector *faceDetector_new(char *model)
         // 增加模型路径
         setting.append(model);
         // 构造一个人脸识别器C++对象
-        seeta::FaceDetector *cppfd = new seeta::FaceDetector(setting);
+        seeta::FaceDetector *cls = new seeta::FaceDetector(setting);
         // 保存人脸识别器对象指针
-        fd->cls = (void *)cppfd;
+        fd->cls = (void *)cls;
     }
     catch (const std::exception &e)
     {

@@ -14,9 +14,9 @@ facerecognizer *facerecognizer_new(char *model)
         // 增加模型路径
         setting.append(model);
         // 构造特征检测器C++对象
-        seeta::FaceRecognizer *cppfr = new seeta::FaceRecognizer(setting);
+        seeta::FaceRecognizer *cls = new seeta::FaceRecognizer(setting);
         // 保存人脸识别器对象指针
-        fr->cls = (void *)cppfr;
+        fr->cls = (void *)cls;
     }
     catch (const std::exception &e)
     {
