@@ -28,6 +28,8 @@ func main() {
 	}
 
 	start := time.Now()
+	begin := start
+
 	faces := fd.Detect(imageData)
 	log.Println("检测人脸", len(faces), "耗时:", time.Since(start))
 
@@ -36,6 +38,7 @@ func main() {
 	fr := sf6go.NewFaceRecognizer(sf6go.ModelType_light)
 	defer fr.Close()
 	fas := sf6go.NewFaceAntiSpoofing_v2()
+	defer fas.Close()
 	for i := 0; i < len(faces); i++ {
 		postion := faces[i].Postion
 		start = time.Now()
@@ -49,8 +52,5 @@ func main() {
 		status := fas.Predict(imageData, postion, pointInfo)
 		log.Println("活体检测", status, "耗时:", time.Since(start))
 	}
-
-	// log.Println(fr.GetCropFaceWidthV2())
-	// log.Println(fr.GetCropFaceHeightV2())
-	// log.Println(fr.GetCropFaceChannelsV2())
+	log.Println("单帧总耗时:", time.Since(begin))
 }

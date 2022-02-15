@@ -25,6 +25,7 @@ type FaceAntiSpoofing struct {
 
 var FaceAntiSpoofing_model = []string{"fas_first.csta", "fas_second.csta"}
 
+// NewFaceAntiSpoofing 创建局部活体检测器,速度快
 func NewFaceAntiSpoofing() *FaceAntiSpoofing {
 	first := C.CString(filepath.Join(_model_base_path, FaceAntiSpoofing_model[0]))
 	defer C.free(unsafe.Pointer(first))
@@ -34,6 +35,7 @@ func NewFaceAntiSpoofing() *FaceAntiSpoofing {
 	return fd
 }
 
+// NewFaceAntiSpoofing_v2 创建全局活体检测器，速度慢
 func NewFaceAntiSpoofing_v2() *FaceAntiSpoofing {
 	first := C.CString(filepath.Join(_model_base_path, FaceAntiSpoofing_model[0]))
 	second := C.CString(filepath.Join(_model_base_path, FaceAntiSpoofing_model[1]))
