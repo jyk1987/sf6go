@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	MaskDetector_score = 0.5
-	MaskDetector_model = "mask_detector.csta"
+	MaskDetector_score float32 = 0.5
+	MaskDetector_model string  = "mask_detector.csta"
 )
 
 type MaskDetector struct {
