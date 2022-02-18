@@ -9,6 +9,7 @@ import "C"
 import (
 	"path/filepath"
 	"reflect"
+	"sort"
 	"unsafe"
 )
 
@@ -64,6 +65,28 @@ func (s *FaceDetector) Detect(imageData *SeetaImageData) []*SeetaFaceInfo {
 		faceInfoList[i] = NewSeetaFaceInfo(clist[i])
 	}
 	return faceInfoList
+}
+
+type SeetaFaceInfoSlice []*SeetaFaceInfo
+
+func (s SeetaFaceInfoSlice) Len() int {
+	return len(s)
+}
+
+func (s SeetaFaceInfoSlice) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+func (s SeetaFaceInfoSlice) Less(i, j int) bool {
+	return s[i].Postion.GetWidth() > s[j].Postion.GetWidth()
+}
+
+func (s *FaceDetector) DetectOrderSize(imageData *SeetaImageData) []*SeetaFaceInfo {
+	faces := s.Detect(imageData)
+	if len(faces) == 0 {
+		return faces
+	}
+	sort.Sort(SeetaFaceInfoSlice(faces))
+	return faces
 }
 
 func (s *FaceDetector) Close() {
