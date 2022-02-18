@@ -34,5 +34,5 @@ func (s *MaskDetector) Close() {
 func (s *MaskDetector) Detect(image *SeetaImageData, postion *SeetaRect) bool {
 	score := C.float(0.0)
 	result := C.maskdetector_detect(s.ptr, image.getCStruct(), postion.getCStruct(), &score)
-	return int(result) == 1 && float32(result) > MaskDetector_score
+	return int(result) == 1 && float32(score) > MaskDetector_score
 }
