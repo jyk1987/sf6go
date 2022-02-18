@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"git.gyb3.cn/kuaibang/sf6go"
+	"github.com/jyk1987/sf6go"
 )
 
 func main() {
