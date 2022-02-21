@@ -31,7 +31,14 @@ int facelandmarker_number(facelandmarker *fl)
     return cls->number();
 }
 
-void facelandmarker_mark(facelandmarker *fl, const SeetaImageData image, const SeetaRect face, SeetaPointF *points, int32_t *mask)
+void facelandmarker_mark(facelandmarker *fl, const SeetaImageData image, const SeetaRect face, SeetaPointF *points)
+{
+    seeta::FaceLandmarker *cls = (seeta::FaceLandmarker *)fl->cls;
+    cls->mark(image, face, points);
+}
+
+// 检测特征点和遮挡情况
+void facelandmarker_mark_mask(facelandmarker *fl, const SeetaImageData image, const SeetaRect face, SeetaPointF *points, int32_t *mask)
 {
     seeta::FaceLandmarker *cls = (seeta::FaceLandmarker *)fl->cls;
     cls->mark(image, face, points, mask);

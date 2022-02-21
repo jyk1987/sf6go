@@ -40,14 +40,22 @@ func (s *FaceLandmarker) number() int {
 	return int(C.facelandmarker_number(s.ptr))
 }
 
-func (s *FaceLandmarker) Mark(image *SeetaImageData, postion *SeetaRect) *SeetaPointInfo {
+// Mark_Mask 检测特征点和遮挡情况
+func (s *FaceLandmarker) Mark_Mask(image *SeetaImageData, postion *SeetaRect) *SeetaPointInfo {
 	pointInfo := NewSeetaPointInfo(s.PointCount)
 	image.Reset()
 	cmask := make([]C.int, s.PointCount)
-	C.facelandmarker_mark(s.ptr, image.getCStruct(), postion.getCStruct(), &pointInfo.Points[0], &cmask[0])
+	C.facelandmarker_mark_mask(s.ptr, image.getCStruct(), postion.getCStruct(), &pointInfo.Points[0], &cmask[0])
 	for i := 0; i < s.PointCount; i++ {
 		pointInfo.Masks[i] = int(cmask[i]) == 1
 	}
+	return pointInfo
+}
+
+func (s *FaceLandmarker) Mark(image *SeetaImageData, postion *SeetaRect) *SeetaPointInfo {
+	pointInfo := NewSeetaPointInfo(s.PointCount)
+	image.Reset()
+	C.facelandmarker_mark(s.ptr, image.getCStruct(), postion.getCStruct(), &pointInfo.Points[0])
 	return pointInfo
 }
 
