@@ -38,9 +38,9 @@ func InitModelPath(path string) error {
 type ModelType uint8
 
 const (
-	ModelType_default ModelType = iota // 默认模型
-	ModelType_light                    // 轻量级模型
-	ModelType_mask                     // 口罩模型
+	ModelType_default ModelType = iota // 默认模型，68特征点
+	ModelType_light                    // 轻量级模型，5特征点
+	ModelType_mask                     // 口罩模型，5特征点
 )
 
 // SeetaImageData 图像数据结构
