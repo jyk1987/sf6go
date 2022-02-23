@@ -1,26 +1,27 @@
 #pragma once
 
-#include "Struct.h"
+#include "CStruct.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-struct SeetaTrackingFaceInfo
-{
-    SeetaRect pos;
-    float score;
+    typedef struct SeetaTrackingFaceInfo
+    {
+        SeetaRect pos;
+        float score;
 
-    int frame_no;
-    int PID;
-    int step;
-};
+        int frame_no;
+        int PID;
+        int step;
+    } SeetaTrackingFaceInfo;
 
-struct SeetaTrackingFaceInfoArray
-{
-    struct SeetaTrackingFaceInfo *data;
-    int size;
-};
+    typedef struct SeetaTrackingFaceInfoArray
+    {
+        struct SeetaTrackingFaceInfo *data;
+        int size;
+    } SeetaTrackingFaceInfoArray;
 
 #ifdef __cplusplus
 }

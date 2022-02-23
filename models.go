@@ -5,6 +5,7 @@ package sf6go
 // #include <stdlib.h>
 // #include "CStruct.h"
 // #include "CFaceInfo.h"
+// #include "CTrackingFaceInfo.h"
 import "C"
 import (
 	"bytes"
@@ -209,6 +210,24 @@ func NewSeetaFaceInfo(seetaFaceInfo C.struct_SeetaFaceInfo) *SeetaFaceInfo {
 	return &SeetaFaceInfo{
 		Postion: newSeetaRect(seetaFaceInfo.pos),
 		Score:   float32(seetaFaceInfo.score),
+	}
+}
+
+type SeetaTrackingFaceInfo struct {
+	Postion  *SeetaRect
+	Score    float32
+	Frame_NO int
+	PID      int
+	Step     int
+}
+
+func NewSeetaTrackingFaceInfo(seetaTrackingFaceInfo C.struct_SeetaTrackingFaceInfo) *SeetaTrackingFaceInfo {
+	return &SeetaTrackingFaceInfo{
+		Postion:  newSeetaRect(seetaTrackingFaceInfo.pos),
+		Score:    float32(seetaTrackingFaceInfo.score),
+		Frame_NO: int(seetaTrackingFaceInfo.frame_no),
+		PID:      int(seetaTrackingFaceInfo.PID),
+		Step:     int(seetaTrackingFaceInfo.step),
 	}
 }
 
