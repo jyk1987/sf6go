@@ -213,6 +213,7 @@ func NewSeetaFaceInfo(seetaFaceInfo C.struct_SeetaFaceInfo) *SeetaFaceInfo {
 	}
 }
 
+// SeetaTrackingFaceInfo 人脸追踪结果信息
 type SeetaTrackingFaceInfo struct {
 	Postion  *SeetaRect
 	Score    float32

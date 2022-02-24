@@ -29,12 +29,12 @@ type FaceDetector struct {
 }
 
 const (
-	_NewFaceDetector_model = "face_detector.csta"
+	_FaceDetector_model = "face_detector.csta"
 )
 
 // NewFaceDetector 创建一个人脸检测器
 func NewFaceDetector() *FaceDetector {
-	cs := C.CString(filepath.Join(_model_base_path, _NewFaceDetector_model))
+	cs := C.CString(filepath.Join(_model_base_path, _FaceDetector_model))
 	defer C.free(unsafe.Pointer(cs))
 	fd := &FaceDetector{
 		ptr: C.faceDetector_new(cs),
@@ -64,6 +64,7 @@ func (s *FaceDetector) Detect(imageData *SeetaImageData) []*SeetaFaceInfo {
 	for i := 0; i < arrayLen; i++ {
 		faceInfoList[i] = NewSeetaFaceInfo(clist[i])
 	}
+	// TODO: c free
 	return faceInfoList
 }
 

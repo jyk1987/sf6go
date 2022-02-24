@@ -24,10 +24,12 @@ extern "C"
 
     void facetracker_SetThreshold(facetracker *ft, float thresh);
 
-    float facetracker_GetScoreThreshold(facetracker *ft);
+    float facetracker_GetThreshold(facetracker *ft);
 
     void facetracker_SetVideoStable(facetracker *ft, int stable);
     int facetracker_GetVideoStable(facetracker *ft);
+
+    void facetracker_SetSingleCalculationThreads(facetracker *ft, int num);
 
 #ifdef __cplusplus
 }

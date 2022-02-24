@@ -53,22 +53,34 @@ void facetracker_SetMinFaceSize(facetracker *ft, int size)
 
 int facetracker_GetMinFaceSize(facetracker *ft)
 {
-    return 1;
+    seeta::FaceTracker *cls = (seeta::FaceTracker *)ft->cls;
+    return cls->GetMinFaceSize();
 }
 
 void facetracker_SetThreshold(facetracker *ft, float thresh)
 {
+    seeta::FaceTracker *cls = (seeta::FaceTracker *)ft->cls;
+    cls->SetThreshold(thresh);
 }
 
-float facetracker_GetScoreThreshold(facetracker *ft)
+float facetracker_GetThreshold(facetracker *ft)
 {
-    return 0.0f;
+    seeta::FaceTracker *cls = (seeta::FaceTracker *)ft->cls;
+    return cls->GetThreshold();
 }
 
 void facetracker_SetVideoStable(facetracker *ft, int stable)
 {
+    seeta::FaceTracker *cls = (seeta::FaceTracker *)ft->cls;
+    cls->SetVideoStable(stable);
 }
 int facetracker_GetVideoStable(facetracker *ft)
 {
-    return 1;
+    seeta::FaceTracker *cls = (seeta::FaceTracker *)ft->cls;
+    return cls->GetVideoStable();
+}
+void facetracker_SetSingleCalculationThreads(facetracker *ft, int num)
+{
+    seeta::FaceTracker *cls = (seeta::FaceTracker *)ft->cls;
+    cls->SetSingleCalculationThreads(num);
 }

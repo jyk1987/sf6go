@@ -23,7 +23,7 @@ const (
 	FaceDetector_threshold_mask    = 0.48 // 口罩5点模型对比阈值
 )
 
-var _FaceDetector_model = map[ModelType]string{
+var _FaceRecognizer_model = map[ModelType]string{
 	ModelType_default: "face_recognizer.csta",
 	ModelType_light:   "face_recognizer_light.csta",
 	ModelType_mask:    "face_recognizer_mask.csta",
@@ -37,7 +37,7 @@ type FaceRecognizer struct {
 
 // NewFaceRecognizer 创建一个人脸识别器
 func NewFaceRecognizer(modelType ModelType) *FaceRecognizer {
-	model := filepath.Join(_model_base_path, _FaceDetector_model[modelType])
+	model := filepath.Join(_model_base_path, _FaceRecognizer_model[modelType])
 	cs := C.CString(model)
 	defer C.free(unsafe.Pointer(cs))
 	fr := &FaceRecognizer{
