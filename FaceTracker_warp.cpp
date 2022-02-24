@@ -84,3 +84,9 @@ void facetracker_SetSingleCalculationThreads(facetracker *ft, int num)
     seeta::FaceTracker *cls = (seeta::FaceTracker *)ft->cls;
     cls->SetSingleCalculationThreads(num);
 }
+
+void facetracker_SetInterval(facetracker *ft, int interval)
+{
+    seeta::FaceTracker *cls = (seeta::FaceTracker *)ft->cls;
+    cls->SetInterval(interval);
+}

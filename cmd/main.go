@@ -22,6 +22,7 @@ func facetracker_Test() {
 	}
 	log.Println(imageData.GetWidth(), "*", imageData.GetHeight())
 	ft := sf6go.NewFaceTracker(imageData.GetWidth(), imageData.GetHeight())
+	ft.SetInterval(10)
 	log.Println("MinFaceSize:", ft.GetMinFaceSize())
 	log.Println("Threshold:", ft.GetThreshold())
 	log.Println("VideoStable:", ft.GetVideoStable())

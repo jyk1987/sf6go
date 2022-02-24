@@ -80,3 +80,7 @@ func (s *FaceTracker) GetVideoStable() bool {
 func (s *FaceTracker) SetThreads(num int) {
 	C.facetracker_SetSingleCalculationThreads(s.ptr, C.int(num))
 }
+
+func (s *FaceTracker) SetInterval(interval int) {
+	C.facetracker_SetInterval(s.ptr, C.int(interval))
+}

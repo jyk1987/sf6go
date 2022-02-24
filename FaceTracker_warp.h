@@ -31,6 +31,8 @@ extern "C"
 
     void facetracker_SetSingleCalculationThreads(facetracker *ft, int num);
 
+    void facetracker_SetInterval(facetracker *ft, int interval);
+
 #ifdef __cplusplus
 }
 #endif
