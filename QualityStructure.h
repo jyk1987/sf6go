@@ -7,15 +7,19 @@
 
 #include "Struct.h"
 
-namespace seeta {
-    namespace v3 {
-        enum QualityLevel {
+namespace seeta
+{
+    namespace v3
+    {
+        enum QualityLevel
+        {
             LOW = 0,
             MEDIUM = 1,
             HIGH = 2,
         };
 
-        class QualityResult {
+        class QualityResult
+        {
         public:
             using self = QualityResult;
 
@@ -24,22 +28,25 @@ namespace seeta {
             QualityResult(QualityLevel level, float score = 0)
                 : level(level), score(score) {}
 
-            QualityLevel level = LOW;   ///< quality level
-            float score = 0;            ///< greater means better, no range limit
+            QualityLevel level = LOW; ///< quality level
+            float score = 0;          ///< greater means better, no range limit
         };
 
-        struct QualityResultEx {
+        struct QualityResultEx
+        {
             int attr;
-            QualityLevel level;   ///< quality level
-            float score;          ///< greater means better, no range limit
+            QualityLevel level; ///< quality level
+            float score;        ///< greater means better, no range limit
         };
 
-        struct QualityResultExArray {
+        struct QualityResultExArray
+        {
             int size;
             QualityResultEx *data;
-        }; 
+        };
 
-        class QualityRule {
+        class QualityRule
+        {
         public:
             using self = QualityRule;
 
@@ -54,13 +61,13 @@ namespace seeta {
              * @return Quality result
              */
             virtual QualityResult check(
-                    const SeetaImageData &image,
-                    const SeetaRect &face,
-                    const SeetaPointF *points,
-                    int32_t N) = 0;
+                const SeetaImageData &image,
+                const SeetaRect &face,
+                const SeetaPointF *points,
+                int32_t N) = 0;
         };
     }
     using namespace v3;
 }
 
-#endif //SEETA_QULITY_EVALUATOR_QULITY_STRUCTURE_H
+#endif // SEETA_QULITY_EVALUATOR_QULITY_STRUCTURE_H
