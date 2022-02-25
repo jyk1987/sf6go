@@ -23,6 +23,7 @@ extern "C"
     {
         void *brightness_cls; // 亮度检测器
         void *clarity_cls;    // 清晰度检测器
+        void *integrity_cls;  // 完整度检测器
     } qualitycheck;
 
     qualitycheck *qualitycheck_new();
@@ -41,6 +42,14 @@ extern "C"
                                              const SeetaPointF *points,
                                              const int32_t N);
     void qualitycheck_SetClarityValues(qualitycheck *qr, float low, float height);
+
+    // 完整度检测
+    CQualityResult qualitycheck_CheckIntegrity(qualitycheck *qr,
+                                               const SeetaImageData image,
+                                               const SeetaRect face,
+                                               const SeetaPointF *points,
+                                               const int32_t N);
+    void qualitycheck_SetIntegrityValues(qualitycheck *qr, float low, float height);
 
     void qualitycheck_free(qualitycheck *qr);
     // int maskdetector_detect(maskdetector *md, const SeetaImageData image, const SeetaRect face, float *score);

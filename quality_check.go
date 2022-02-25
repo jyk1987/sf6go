@@ -84,3 +84,23 @@ func (s *QualityCheck) CheckClarity(img *SeetaImageData, postion *SeetaRect, poi
 func (s *QualityCheck) SetClarityValues(low, height float32) {
 	C.qualitycheck_SetClarityValues(s.ptr, C.float(low), C.float(height))
 }
+
+// CheckIntegrity 检测完成度
+func (s *QualityCheck) CheckIntegrity(img *SeetaImageData, postion *SeetaRect, points *SeetaPointInfo) *QualityResult {
+	var cresult C.struct_CQualityResult = C.qualitycheck_CheckIntegrity(
+		s.ptr, img.getCStruct(),
+		postion.getCStruct(),
+		points.getCSeetaPointFArray(),
+		C.int(points.PointCount),
+	)
+	result := &QualityResult{
+		Score: float32(cresult.score),
+		Level: QualityLevel(cresult.level),
+	}
+	return result
+}
+
+// SetIntegrityValues 设置清晰度阈值
+func (s *QualityCheck) SetIntegrityValues(low, height float32) {
+	C.qualitycheck_SetIntegrityValues(s.ptr, C.float(low), C.float(height))
+}

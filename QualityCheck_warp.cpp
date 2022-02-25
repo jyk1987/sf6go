@@ -3,6 +3,7 @@
 #include "QualityOfBrightness.h"
 #include "QualityOfClarity.h"
 #include "QualityCheck_warp.h"
+#include "QualityOfIntegrity.h"
 #include <iostream>
 
 CQualityResult CQualityResult_new(seeta::QualityResult *result)
@@ -28,6 +29,8 @@ qualitycheck *qualitycheck_new()
     // }
     return qr;
 }
+
+// 亮度检测
 CQualityResult qualitycheck_CheckBrightness(
     qualitycheck *qr, const SeetaImageData image, const SeetaRect face,
     const SeetaPointF *points, const int32_t N)
@@ -58,6 +61,7 @@ void qualitycheck_SetBrightnessValues(qualitycheck *qr, float v0, float v1, floa
     qr->brightness_cls = (void *)cls;
 }
 
+// 清晰度检测
 CQualityResult qualitycheck_CheckClarity(qualitycheck *qr,
                                          const SeetaImageData image,
                                          const SeetaRect face,
@@ -87,6 +91,38 @@ void qualitycheck_SetClarityValues(qualitycheck *qr, float low, float height)
         qr->clarity_cls = nullptr;
     }
     qr->clarity_cls = (void *)cls;
+}
+
+// 完整度检测
+CQualityResult qualitycheck_CheckIntegrity(qualitycheck *qr,
+                                           const SeetaImageData image,
+                                           const SeetaRect face,
+                                           const SeetaPointF *points,
+                                           const int32_t N)
+{
+    seeta::QualityOfIntegrity *cls;
+    if (!qr->integrity_cls)
+    {
+        cls = new seeta::QualityOfIntegrity();
+        qr->integrity_cls = (void *)cls;
+    }
+    else
+    {
+        cls = (seeta::QualityOfIntegrity *)qr->integrity_cls;
+    }
+
+    auto result = cls->check(image, face, points, N);
+    return CQualityResult_new(&result);
+}
+void qualitycheck_SetIntegrityValues(qualitycheck *qr, float low, float height)
+{
+    seeta::QualityOfIntegrity *cls = new seeta::QualityOfIntegrity(low, height);
+    if (qr->integrity_cls)
+    {
+        delete (seeta::QualityOfIntegrity *)qr->integrity_cls;
+        qr->integrity_cls = nullptr;
+    }
+    qr->integrity_cls = (void *)cls;
 }
 
 void qualitycheck_free(qualitycheck *qr)

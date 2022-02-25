@@ -45,6 +45,7 @@ func facetracker_Test() {
 
 func standard_Test() {
 	log.Println("标准测试开始:", time.Now())
+	// 人脸检测器
 	fd := sf6go.NewFaceDetector()
 	defer fd.Close()
 
@@ -58,20 +59,31 @@ func standard_Test() {
 
 	faces := fd.Detect(imageData)
 	log.Println("检测人脸", len(faces), "个耗时:", time.Since(start))
-
+	// 人脸特征定位器
 	fl := sf6go.NewFaceLandmarker(sf6go.ModelType_light)
 	defer fl.Close()
+	// 人脸特征提取器
 	fr := sf6go.NewFaceRecognizer(sf6go.ModelType_light)
 	defer fr.Close()
+	// 活体检测器（全局）
 	fas := sf6go.NewFaceAntiSpoofing_v2()
 	defer fas.Close()
+	// 口罩检测器
 	md := sf6go.NewMaskDetector()
 	defer md.Close()
+	// 质量评估器
 	qr := sf6go.NewQualityCheck()
 	defer qr.Close()
+	// 如果使用默认值，一下参数可以不设置
+	qr.SetBrightnessValues(70, 100, 210, 230)
+	qr.SetClarityValues(0.1, 0.2)
+	qr.SetIntegrityValues(10, 1.5)
 	for i := 0; i < len(faces); i++ {
-		log.Printf("===========识别人脸%v===========", i)
+		log.Println("---------------------------------------")
 		postion := faces[i].Postion
+		log.Printf("识别人脸%v,x:%v,y:%v,width:%v,height:%v", i,
+			postion.GetX(), postion.GetY(), postion.GetWidth(), postion.GetHeight(),
+		)
 		start = time.Now()
 		isMask := md.Detect(imageData, postion)
 		log.Println("口罩检测:", isMask, "耗时:", time.Since(start))
@@ -82,9 +94,11 @@ func standard_Test() {
 		brightness := qr.CheckBrightness(imageData, postion, pointInfo)
 		log.Printf("亮度:%v,检测耗时:%v", brightness.Level, time.Since(start))
 		start = time.Now()
-		start = time.Now()
 		clarity := qr.CheckClarity(imageData, postion, pointInfo)
 		log.Printf("清晰度:%v,检测耗时:%v", clarity.Level, time.Since(start))
+		start = time.Now()
+		integrity := qr.CheckIntegrity(imageData, postion, pointInfo)
+		log.Printf("完整度:%v,检测耗时:%v", integrity.Level, time.Since(start))
 		start = time.Now()
 		success, features := fr.Extract(imageData, pointInfo)
 		log.Println("特征提取", success, len(features), "耗时:", time.Since(start))
