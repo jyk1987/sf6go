@@ -67,8 +67,7 @@ func standard_Test() {
 	defer fas.Close()
 	md := sf6go.NewMaskDetector()
 	defer md.Close()
-	qr := sf6go.NewQualityRule()
-	qr.SetBrightnessValues(70, 100, 320, 230)
+	qr := sf6go.NewQualityCheck()
 	defer qr.Close()
 	for i := 0; i < len(faces); i++ {
 		log.Printf("===========识别人脸%v===========", i)
@@ -81,7 +80,6 @@ func standard_Test() {
 		log.Println("特征定位耗时:", time.Since(start))
 		start = time.Now()
 		brightness := qr.CheckBrightness(imageData, postion, pointInfo)
-		qr.SetBrightnessValues(70, 100, 320, 230)
 		log.Printf("亮度%v检测耗时:%v", brightness.Level, time.Since(start))
 		start = time.Now()
 		success, features := fr.Extract(imageData, pointInfo)

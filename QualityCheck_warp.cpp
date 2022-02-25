@@ -1,7 +1,7 @@
 #include "Struct.h"
 #include "QualityStructure.h"
 #include "QualityOfBrightness.h"
-#include "QualityRule_warp.h"
+#include "QualityCheck_warp.h"
 #include <iostream>
 
 CQualityResult CQualityResult_new(seeta::QualityResult *result)
@@ -13,9 +13,9 @@ CQualityResult CQualityResult_new(seeta::QualityResult *result)
     return cresult;
 }
 
-qualityrule *qualityrule_new()
+qualitycheck *qualitycheck_new()
 {
-    qualityrule *qr = (qualityrule *)calloc(1, sizeof(qualityrule));
+    qualitycheck *qr = (qualitycheck *)calloc(1, sizeof(qualitycheck));
     // try
     // {
     //     seeta::QualityOfBrightness *brightness = new seeta::QualityOfBrightness();
@@ -27,8 +27,8 @@ qualityrule *qualityrule_new()
     // }
     return qr;
 }
-CQualityResult qualityrule_CheckBrightness(
-    qualityrule *qr, const SeetaImageData image, const SeetaRect face,
+CQualityResult qualitycheck_CheckBrightness(
+    qualitycheck *qr, const SeetaImageData image, const SeetaRect face,
     const SeetaPointF *points, const int32_t N)
 {
     seeta::QualityOfBrightness *cls;
@@ -46,7 +46,7 @@ CQualityResult qualityrule_CheckBrightness(
     return CQualityResult_new(&result);
 }
 
-void qualityrule_SetBrightnessValues(qualityrule *qr, float v0, float v1, float v2, float v3)
+void qualitycheck_SetBrightnessValues(qualitycheck *qr, float v0, float v1, float v2, float v3)
 {
     seeta::QualityOfBrightness *cls = new seeta::QualityOfBrightness(v0, v1, v2, v3);
     if (qr->brightness_cls)
@@ -57,7 +57,7 @@ void qualityrule_SetBrightnessValues(qualityrule *qr, float v0, float v1, float 
     qr->brightness_cls = (void *)cls;
 }
 
-void qualityrule_free(qualityrule *qr)
+void qualitycheck_free(qualitycheck *qr)
 {
     if (qr)
     {
