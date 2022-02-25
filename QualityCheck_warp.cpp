@@ -1,6 +1,7 @@
 #include "Struct.h"
 #include "QualityStructure.h"
 #include "QualityOfBrightness.h"
+#include "QualityOfClarity.h"
 #include "QualityCheck_warp.h"
 #include <iostream>
 
@@ -57,6 +58,37 @@ void qualitycheck_SetBrightnessValues(qualitycheck *qr, float v0, float v1, floa
     qr->brightness_cls = (void *)cls;
 }
 
+CQualityResult qualitycheck_CheckClarity(qualitycheck *qr,
+                                         const SeetaImageData image,
+                                         const SeetaRect face,
+                                         const SeetaPointF *points,
+                                         const int32_t N)
+{
+    seeta::QualityOfClarity *cls;
+    if (!qr->clarity_cls)
+    {
+        cls = new seeta::QualityOfClarity();
+        qr->clarity_cls = (void *)cls;
+    }
+    else
+    {
+        cls = (seeta::QualityOfClarity *)qr->clarity_cls;
+    }
+
+    auto result = cls->check(image, face, points, N);
+    return CQualityResult_new(&result);
+}
+void qualitycheck_SetClarityValues(qualitycheck *qr, float low, float height)
+{
+    seeta::QualityOfClarity *cls = new seeta::QualityOfClarity(low, height);
+    if (qr->clarity_cls)
+    {
+        delete (seeta::QualityOfClarity *)qr->clarity_cls;
+        qr->clarity_cls = nullptr;
+    }
+    qr->clarity_cls = (void *)cls;
+}
+
 void qualitycheck_free(qualitycheck *qr)
 {
     if (qr)
@@ -65,6 +97,11 @@ void qualitycheck_free(qualitycheck *qr)
         {
             delete (seeta::QualityOfBrightness *)qr->brightness_cls;
             qr->brightness_cls = nullptr;
+        }
+        if (qr->clarity_cls)
+        {
+            delete (seeta::QualityOfClarity *)qr->clarity_cls;
+            qr->clarity_cls = nullptr;
         }
 
         free(qr);
