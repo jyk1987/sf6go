@@ -104,3 +104,18 @@ func (s *QualityCheck) CheckIntegrity(img *SeetaImageData, postion *SeetaRect, p
 func (s *QualityCheck) SetIntegrityValues(low, height float32) {
 	C.qualitycheck_SetIntegrityValues(s.ptr, C.float(low), C.float(height))
 }
+
+// CheckPose 姿态检测
+func (s *QualityCheck) CheckPose(img *SeetaImageData, postion *SeetaRect, points *SeetaPointInfo) *QualityResult {
+	var cresult C.struct_CQualityResult = C.qualitycheck_CheckPose(
+		s.ptr, img.getCStruct(),
+		postion.getCStruct(),
+		points.getCSeetaPointFArray(),
+		C.int(points.PointCount),
+	)
+	result := &QualityResult{
+		Score: float32(cresult.score),
+		Level: QualityLevel(cresult.level),
+	}
+	return result
+}

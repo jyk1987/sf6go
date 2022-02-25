@@ -4,6 +4,7 @@
 #include "QualityOfClarity.h"
 #include "QualityCheck_warp.h"
 #include "QualityOfIntegrity.h"
+#include "QualityOfPose.h"
 #include <iostream>
 
 CQualityResult CQualityResult_new(seeta::QualityResult *result)
@@ -125,6 +126,28 @@ void qualitycheck_SetIntegrityValues(qualitycheck *qr, float low, float height)
     qr->integrity_cls = (void *)cls;
 }
 
+// 姿态检测
+CQualityResult qualitycheck_CheckPose(qualitycheck *qr,
+                                      const SeetaImageData image,
+                                      const SeetaRect face,
+                                      const SeetaPointF *points,
+                                      const int32_t N)
+{
+    seeta::QualityOfPose *cls;
+    if (!qr->pose_cls)
+    {
+        cls = new seeta::QualityOfPose();
+        qr->pose_cls = (void *)cls;
+    }
+    else
+    {
+        cls = (seeta::QualityOfPose *)qr->pose_cls;
+    }
+
+    auto result = cls->check(image, face, points, N);
+    return CQualityResult_new(&result);
+}
+
 void qualitycheck_free(qualitycheck *qr)
 {
     if (qr)
@@ -138,6 +161,16 @@ void qualitycheck_free(qualitycheck *qr)
         {
             delete (seeta::QualityOfClarity *)qr->clarity_cls;
             qr->clarity_cls = nullptr;
+        }
+        if (qr->integrity_cls)
+        {
+            delete (seeta::QualityOfIntegrity *)qr->integrity_cls;
+            qr->integrity_cls = nullptr;
+        }
+        if (qr->pose_cls)
+        {
+            delete (seeta::QualityOfPose *)qr->pose_cls;
+            qr->pose_cls = nullptr;
         }
 
         free(qr);
