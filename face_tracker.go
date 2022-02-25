@@ -28,8 +28,8 @@ func NewFaceTracker(width, height int) *FaceTracker {
 	return ft
 }
 
-func (s *FaceTracker) Track(image *SeetaImageData) []*SeetaTrackingFaceInfo {
-	var result C.struct_SeetaTrackingFaceInfoArray = C.facetracker_Track(s.ptr, image.getCStruct())
+func (s *FaceTracker) Track(img *SeetaImageData) []*SeetaTrackingFaceInfo {
+	var result C.struct_SeetaTrackingFaceInfoArray = C.facetracker_Track(s.ptr, img.getCStruct())
 	var clist []C.struct_SeetaTrackingFaceInfo
 	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(&clist))
 	arrayLen := int(result.size)

@@ -51,8 +51,8 @@ func (s *FaceDetector) GetProperty(property FaceDetectorProperty) float64 {
 	return float64(C.facedetector_getProperty(s.ptr, C.int(property)))
 }
 
-func (s *FaceDetector) Detect(imageData *SeetaImageData) []*SeetaFaceInfo {
-	var result C.struct_SeetaFaceInfoArray = C.facedetector_detect(s.ptr, imageData.getCStruct())
+func (s *FaceDetector) Detect(img *SeetaImageData) []*SeetaFaceInfo {
+	var result C.struct_SeetaFaceInfoArray = C.facedetector_detect(s.ptr, img.getCStruct())
 	var clist []C.struct_SeetaFaceInfo
 	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(&clist))
 	arrayLen := int(result.size)
