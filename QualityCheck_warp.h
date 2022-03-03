@@ -60,7 +60,6 @@ extern "C"
                                           const int32_t N);
 
     void qualitycheck_free(qualitycheck *qr);
-    // int maskdetector_detect(maskdetector *md, const SeetaImageData image, const SeetaRect face, float *score);
 
 #ifdef __cplusplus
 }

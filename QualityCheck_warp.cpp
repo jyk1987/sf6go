@@ -12,23 +12,12 @@ CQualityResult CQualityResult_new(seeta::QualityResult *result)
     CQualityResult cresult;
     cresult.score = result->score;
     cresult.level = CQualityLevel((int)result->level);
-    result = nullptr;
     return cresult;
 }
 
 qualitycheck *qualitycheck_new()
 {
-    qualitycheck *qr = (qualitycheck *)calloc(1, sizeof(qualitycheck));
-    // try
-    // {
-    //     seeta::QualityOfBrightness *brightness = new seeta::QualityOfBrightness();
-    //     qr->brightness_cls = (void *)brightness;
-    // }
-    // catch (const std::exception &e)
-    // {
-    //     std::cerr << e.what() << '\n';
-    // }
-    return qr;
+    return (qualitycheck *)calloc(1, sizeof(qualitycheck));
 }
 
 // 亮度检测

@@ -48,17 +48,6 @@ func standard_Test() {
 	// 人脸检测器
 	fd := sf6go.NewFaceDetector()
 	defer fd.Close()
-
-	imageData, err := sf6go.NewSeetaImageDataFromFile("duo6.jpeg")
-	if err != nil {
-		log.Panic(err)
-	}
-
-	start := time.Now()
-	begin := start
-
-	faces := fd.Detect(imageData)
-	log.Println("检测人脸", len(faces), "个耗时:", time.Since(start))
 	// 人脸特征定位器
 	fl := sf6go.NewFaceLandmarker(sf6go.ModelType_light)
 	defer fl.Close()
@@ -78,37 +67,52 @@ func standard_Test() {
 	qr.SetBrightnessValues(70, 100, 210, 230)
 	qr.SetClarityValues(0.1, 0.2)
 	qr.SetIntegrityValues(10, 1.5)
-	for i := 0; i < len(faces); i++ {
-		log.Println("---------------------------------------")
-		postion := faces[i].Postion
-		log.Printf("识别人脸%v,x:%v,y:%v,width:%v,height:%v", i,
-			postion.GetX(), postion.GetY(), postion.GetWidth(), postion.GetHeight(),
-		)
-		start = time.Now()
-		isMask := md.Detect(imageData, postion)
-		log.Println("口罩检测:", isMask, "耗时:", time.Since(start))
-		start = time.Now()
-		pointInfo := fl.Mark(imageData, postion)
-		log.Println("特征定位耗时:", time.Since(start))
-		start = time.Now()
-		brightness := qr.CheckBrightness(imageData, postion, pointInfo)
-		log.Printf("亮度:%v,检测耗时:%v", brightness.Level, time.Since(start))
-		start = time.Now()
-		clarity := qr.CheckClarity(imageData, postion, pointInfo)
-		log.Printf("清晰度:%v,检测耗时:%v", clarity.Level, time.Since(start))
-		start = time.Now()
-		integrity := qr.CheckIntegrity(imageData, postion, pointInfo)
-		log.Printf("完整度:%v,检测耗时:%v", integrity.Level, time.Since(start))
-		start = time.Now()
-		pose := qr.CheckPose(imageData, postion, pointInfo)
-		log.Printf("姿态:%v,可信度:%v,检测耗时:%v", pose.Level, pose.Score, time.Since(start))
-		start = time.Now()
-		success, features := fr.Extract(imageData, pointInfo)
-		log.Println("特征提取", success, len(features), "耗时:", time.Since(start))
-		start = time.Now()
-		status := fas.Predict(imageData, postion, pointInfo)
-		log.Println("活体检测", status, "耗时:", time.Since(start))
+
+	imageData, err := sf6go.NewSeetaImageDataFromFile("duo6.jpeg")
+	if err != nil {
+		log.Panic(err)
 	}
-	log.Println("单帧总耗时:", time.Since(begin))
+	for i := 0; i < 2; i++ {
+
+		start := time.Now()
+		begin := start
+
+		faces := fd.Detect(imageData)
+		log.Println("检测人脸", len(faces), "个耗时:", time.Since(start))
+		// 人脸特征定位器
+
+		for i := 0; i < len(faces); i++ {
+			log.Println("---------------------------------------")
+			postion := faces[i].Postion
+			log.Printf("识别人脸%v,x:%v,y:%v,width:%v,height:%v", i,
+				postion.GetX(), postion.GetY(), postion.GetWidth(), postion.GetHeight(),
+			)
+			start = time.Now()
+			isMask := md.Detect(imageData, postion)
+			log.Println("口罩检测:", isMask, "耗时:", time.Since(start))
+			start = time.Now()
+			pointInfo := fl.Mark(imageData, postion)
+			log.Println("特征定位耗时:", time.Since(start))
+			start = time.Now()
+			brightness := qr.CheckBrightness(imageData, postion, pointInfo)
+			log.Printf("亮度:%v,检测耗时:%v", brightness.Level, time.Since(start))
+			start = time.Now()
+			clarity := qr.CheckClarity(imageData, postion, pointInfo)
+			log.Printf("清晰度:%v,检测耗时:%v", clarity.Level, time.Since(start))
+			start = time.Now()
+			integrity := qr.CheckIntegrity(imageData, postion, pointInfo)
+			log.Printf("完整度:%v,检测耗时:%v", integrity.Level, time.Since(start))
+			start = time.Now()
+			pose := qr.CheckPose(imageData, postion, pointInfo)
+			log.Printf("姿态:%v,可信度:%v,检测耗时:%v", pose.Level, pose.Score, time.Since(start))
+			start = time.Now()
+			success, features := fr.Extract(imageData, pointInfo)
+			log.Println("特征提取", success, len(features), "耗时:", time.Since(start))
+			start = time.Now()
+			status := fas.Predict(imageData, postion, pointInfo)
+			log.Println("活体检测", status, "耗时:", time.Since(start))
+		}
+		log.Println("单帧总耗时:", time.Since(begin))
+	}
 	log.Println("标准测试结束:", time.Now())
 }
