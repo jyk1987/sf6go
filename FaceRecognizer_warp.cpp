@@ -65,6 +65,12 @@ int facerecognizer_GetExtractFeatureSize(facerecognizer *fr)
     return cls->GetExtractFeatureSize();
 }
 
+float facerecognizer_CalculateSimilarity(facerecognizer *fr, const float *features1, const float *features2)
+{
+    seeta::FaceRecognizer *cls = (seeta::FaceRecognizer *)fr->cls;
+    return cls->CalculateSimilarity(features1, features2);
+}
+
 void facerecognizer_free(facerecognizer *fr)
 {
     if (fr)

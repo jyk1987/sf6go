@@ -72,6 +72,19 @@ func (s *FaceRecognizer) getExtractFeatureSize() int {
 	return int(C.facerecognizer_GetExtractFeatureSize(s.ptr))
 }
 
+// CalculateSimilarity 对比两个特征的相似度
+func (s *FaceRecognizer) CalculateSimilarity(features1, features2 []float32) float32 {
+	count := len(features1)
+	cfeatures1 := make([]C.float, count)
+	cfeatures2 := make([]C.float, count)
+	for i := 0; i < count; i++ {
+		cfeatures1[i] = C.float(features1[i])
+		cfeatures2[i] = C.float(features2[i])
+	}
+
+	return float32(C.facerecognizer_CalculateSimilarity(s.ptr, &cfeatures1[0], &cfeatures2[0]))
+}
+
 // Extract 提取人脸特征,从完整图像中提取人脸特征数据
 // 返回值 bool代表提取是否成功
 // 返回值 []float32为特征数据
