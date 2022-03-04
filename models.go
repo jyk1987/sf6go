@@ -12,6 +12,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"image"
+	"image/color"
 	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
@@ -69,6 +70,24 @@ func (s *SeetaImageData) GetData() []uint8 {
 		data[i] = uint8(s.cdata[i])
 	}
 	return data
+}
+
+func (s *SeetaImageData) GetImage() image.Image {
+	width := s.GetWidth()
+	height := s.GetHeight()
+	channel := s.GetChannels()
+	img := image.NewRGBA(image.Rect(0, 0, width, height))
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			offset := y*width*channel + x*channel
+			img.SetRGBA(x, y, color.RGBA{
+				B: uint8(s.cdata[offset]),
+				G: uint8(s.cdata[offset+1]),
+				R: uint8(s.cdata[offset+2]),
+			})
+		}
+	}
+	return img
 }
 
 func (s *SeetaImageData) getCStruct() C.struct_SeetaImageData {
