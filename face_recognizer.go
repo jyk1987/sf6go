@@ -85,7 +85,29 @@ func (s *FaceRecognizer) CalculateSimilarity(features1, features2 []float32) flo
 	return float32(C.facerecognizer_CalculateSimilarity(s.ptr, &cfeatures1[0], &cfeatures2[0]))
 }
 
+// CropFaceV2 裁剪人脸，裁剪人脸并做人脸对齐
+func (s *FaceRecognizer) CropFaceV2(imageData *SeetaImageData, pointInfo *SeetaPointInfo) *SeetaImageData {
+	face := C.facerecognizer_CropFaceV2(s.ptr, imageData.getCStruct(), pointInfo.getCSeetaPointFArray())
+	return NewSeetaImageDataFromCStruct(face)
+}
+
+// ExtractCroppedFace 对裁剪过的人脸进行特征提取操作
+func (s *FaceRecognizer) ExtractCroppedFace(face *SeetaImageData) (bool, []float32) {
+	cfeatures := make([]C.float, s.FeatureSize)
+	success := int(C.facerecognizer_ExtractCroppedFace(s.ptr, face.getCStruct(), &cfeatures[0])) == 1
+	if success {
+		features := make([]float32, s.FeatureSize)
+		for i := 0; i < s.FeatureSize; i++ {
+			features[i] = float32(cfeatures[i])
+		}
+		return success, features
+	}
+	return success, nil
+}
+
 // Extract 提取人脸特征,从完整图像中提取人脸特征数据
+// ！！！pointInfo 必须时标准5点特征定位信息！！！
+// 此方法等效CropFaceV2+ExtractCroppedFace
 // 返回值 bool代表提取是否成功
 // 返回值 []float32为特征数据
 func (s *FaceRecognizer) Extract(imageData *SeetaImageData, pointInfo *SeetaPointInfo) (bool, []float32) {
@@ -99,11 +121,6 @@ func (s *FaceRecognizer) Extract(imageData *SeetaImageData, pointInfo *SeetaPoin
 		return success, features
 	}
 	return success, nil
-}
-
-func (s *FaceRecognizer) CropFaceV2(imageData *SeetaImageData, pointInfo *SeetaPointInfo) *SeetaImageData {
-	face := C.facerecognizer_CropFaceV2(s.ptr, imageData.getCStruct(), pointInfo.getCSeetaPointFArray())
-	return NewSeetaImageDataFromCStruct(face)
 }
 
 func (s *FaceRecognizer) Close() {

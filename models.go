@@ -127,8 +127,8 @@ func NewSeetaImageDataFromCStruct(cstruct C.struct_SeetaImageData) *SeetaImageDa
 	for i := 0; i < arrayLen; i++ {
 		cdata[i] = clist[i]
 	}
-	log.Println(arrayLen)
 	imageData.cdata = cdata
+	imageData._ptr.data = &imageData.cdata[0]
 	return imageData
 }
 

@@ -52,6 +52,23 @@ int facerecognizer_GetCropFaceChannelsV2(facerecognizer *fr)
     seeta::FaceRecognizer *cls = (seeta::FaceRecognizer *)fr->cls;
     return cls->GetCropFaceChannelsV2();
 }
+SeetaImageData facerecognizer_CropFaceV2(facerecognizer *fr, const SeetaImageData image, const SeetaPointF *points)
+{
+    seeta::FaceRecognizer *cls = (seeta::FaceRecognizer *)fr->cls;
+    SeetaImageData face;
+    face.width = cls->GetCropFaceWidthV2();
+    face.height = cls->GetCropFaceHeightV2();
+    face.channels = cls->GetCropFaceChannelsV2();
+    unsigned char data[face.width * face.height * face.channels];
+    face.data = &data[0];
+    cls->CropFaceV2(image, points, face);
+    return face;
+}
+int facerecognizer_ExtractCroppedFace(facerecognizer *fr, const SeetaImageData image, float *features)
+{
+    seeta::FaceRecognizer *cls = (seeta::FaceRecognizer *)fr->cls;
+    return cls->ExtractCroppedFace(image, features);
+}
 
 int facerecognizer_Extract(facerecognizer *fr, const SeetaImageData image, const SeetaPointF *points, float *features)
 {
@@ -69,19 +86,6 @@ float facerecognizer_CalculateSimilarity(facerecognizer *fr, const float *featur
 {
     seeta::FaceRecognizer *cls = (seeta::FaceRecognizer *)fr->cls;
     return cls->CalculateSimilarity(features1, features2);
-}
-
-SeetaImageData facerecognizer_CropFaceV2(facerecognizer *fr, const SeetaImageData image, const SeetaPointF *points)
-{
-    seeta::FaceRecognizer *cls = (seeta::FaceRecognizer *)fr->cls;
-    SeetaImageData face;
-    face.width = cls->GetCropFaceWidthV2();
-    face.height = cls->GetCropFaceHeightV2();
-    face.channels = cls->GetCropFaceChannelsV2();
-    unsigned char data[face.width * face.height * face.channels];
-    face.data = &data[0];
-    cls->CropFaceV2(image, points, face);
-    return face;
 }
 
 void facerecognizer_free(facerecognizer *fr)

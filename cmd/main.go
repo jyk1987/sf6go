@@ -78,13 +78,13 @@ func standard_Test() {
 		start := time.Now()
 		begin := start
 
-		faces := fd.Detect(imageData)
-		log.Println("检测人脸", len(faces), "个耗时:", time.Since(start))
+		postions := fd.Detect(imageData)
+		log.Println("检测人脸", len(postions), "个耗时:", time.Since(start))
 		// 人脸特征定位器
 
-		for i := 0; i < len(faces); i++ {
+		for i := 0; i < len(postions); i++ {
 			log.Println("---------------------------------------")
-			postion := faces[i].Postion
+			postion := postions[i].Postion
 			log.Printf("识别人脸%v,x:%v,y:%v,width:%v,height:%v", i,
 				postion.GetX(), postion.GetY(), postion.GetWidth(), postion.GetHeight(),
 			)
@@ -107,8 +107,20 @@ func standard_Test() {
 			pose := qr.CheckPose(imageData, postion, pointInfo)
 			log.Printf("姿态:%v,可信度:%v,检测耗时:%v", pose.Level, pose.Score, time.Since(start))
 			start = time.Now()
+			// 组合方法特征提取
 			success, features := fr.Extract(imageData, pointInfo)
-			log.Println("特征提取", success, len(features), "耗时:", time.Since(start))
+			// 单独人脸裁剪
+			face := fr.CropFaceV2(imageData, pointInfo)
+			// 通过裁剪的人脸获取特征
+			_, features_crop := fr.ExtractCroppedFace(face)
+			ok := true
+			// 两种方法获取特征一致性验证
+			for i := 0; i < len(features_crop); i++ {
+				if features[i] != features_crop[i] {
+					ok = false
+				}
+			}
+			log.Println("特征提取", success, len(features), "特征提起方法一致性测试:", ok, "耗时:", time.Since(start))
 			start = time.Now()
 			status := fas.Predict(imageData, postion, pointInfo)
 			log.Println("活体检测", status, "耗时:", time.Since(start))
