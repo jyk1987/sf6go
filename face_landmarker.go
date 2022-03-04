@@ -41,7 +41,8 @@ func (s *FaceLandmarker) number() int {
 }
 
 // Mark_Mask 检测特征点和遮挡情况
-func (s *FaceLandmarker) Mark_Mask(img *SeetaImageData, postion *SeetaRect) *SeetaPointInfo {
+// 返回的特征点遮挡信息只有在使用face_landmarker_mask_pts5.csta模型时有效
+func (s *FaceLandmarker) Mark(img *SeetaImageData, postion *SeetaRect) *SeetaPointInfo {
 	pointInfo := NewSeetaPointInfo(s.PointCount)
 	img.Reset()
 	cmask := make([]C.int, s.PointCount)
@@ -52,12 +53,12 @@ func (s *FaceLandmarker) Mark_Mask(img *SeetaImageData, postion *SeetaRect) *See
 	return pointInfo
 }
 
-func (s *FaceLandmarker) Mark(img *SeetaImageData, postion *SeetaRect) *SeetaPointInfo {
-	pointInfo := NewSeetaPointInfo(s.PointCount)
-	img.Reset()
-	C.facelandmarker_mark(s.ptr, img.getCStruct(), postion.getCStruct(), &pointInfo.Points[0])
-	return pointInfo
-}
+// func (s *FaceLandmarker) Mark(img *SeetaImageData, postion *SeetaRect) *SeetaPointInfo {
+// 	pointInfo := NewSeetaPointInfo(s.PointCount)
+// 	img.Reset()
+// 	C.facelandmarker_mark(s.ptr, img.getCStruct(), postion.getCStruct(), &pointInfo.Points[0])
+// 	return pointInfo
+// }
 
 func (s *FaceLandmarker) Close() {
 	C.facelandmarker_free(s.ptr)

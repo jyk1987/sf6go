@@ -49,7 +49,8 @@ func standard_Test() {
 	fd := sf6go.NewFaceDetector()
 	defer fd.Close()
 	// 人脸特征定位器
-	fl := sf6go.NewFaceLandmarker(sf6go.ModelType_light)
+	// 使用5点带遮挡信息模型
+	fl := sf6go.NewFaceLandmarker(sf6go.ModelType_mask)
 	defer fl.Close()
 	// 人脸特征提取器
 	fr := sf6go.NewFaceRecognizer(sf6go.ModelType_light)
