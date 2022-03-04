@@ -48,7 +48,7 @@ func (s *FaceLandmarker) Mark(img *SeetaImageData, postion *SeetaRect) *SeetaPoi
 	cmask := make([]C.int, s.PointCount)
 	C.facelandmarker_mark_mask(s.ptr, img.getCStruct(), postion.getCStruct(), &pointInfo.Points[0], &cmask[0])
 	for i := 0; i < s.PointCount; i++ {
-		pointInfo.Masks[i] = int(cmask[i]) == 1
+		pointInfo.Masks[i] = int(cmask[i])
 	}
 	return pointInfo
 }

@@ -236,19 +236,28 @@ func NewSeetaTrackingFaceInfo(seetaTrackingFaceInfo C.struct_SeetaTrackingFaceIn
 type SeetaPointInfo struct {
 	PointCount int // 特征点数
 	Points     []C.struct_SeetaPointF
-	Masks      []bool
+	Masks      []int
 }
 
 func NewSeetaPointInfo(pointCount int) *SeetaPointInfo {
 	return &SeetaPointInfo{
 		PointCount: pointCount,
 		Points:     make([]C.struct_SeetaPointF, pointCount),
-		Masks:      make([]bool, pointCount),
+		Masks:      make([]int, pointCount),
 	}
 }
 
 func (s *SeetaPointInfo) getCSeetaPointFArray() *C.struct_SeetaPointF {
 	return &s.Points[0]
+}
+
+// Mask 是否佩戴口罩
+func (s *SeetaPointInfo) Mask() bool {
+	maskCount := 0
+	for i := 2; i < len(s.Masks); i++ {
+		maskCount += s.Masks[i]
+	}
+	return maskCount >= 2
 }
 
 // SeetaModelSetting 模型配置数据结构
