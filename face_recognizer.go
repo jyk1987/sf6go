@@ -101,6 +101,11 @@ func (s *FaceRecognizer) Extract(imageData *SeetaImageData, pointInfo *SeetaPoin
 	return success, nil
 }
 
+func (s *FaceRecognizer) CropFaceV2(imageData *SeetaImageData, pointInfo *SeetaPointInfo) *SeetaImageData {
+	face := C.facerecognizer_CropFaceV2(s.ptr, imageData.getCStruct(), pointInfo.getCSeetaPointFArray())
+	return NewSeetaImageDataFromCStruct(face)
+}
+
 func (s *FaceRecognizer) Close() {
 	C.facerecognizer_free(s.ptr)
 }

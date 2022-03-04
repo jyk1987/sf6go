@@ -27,6 +27,8 @@ extern "C"
 
     float facerecognizer_CalculateSimilarity(facerecognizer *fr, const float *features1, const float *features2);
 
+    SeetaImageData facerecognizer_CropFaceV2(facerecognizer *fr, const SeetaImageData image, const SeetaPointF *points);
+
 #ifdef __cplusplus
 }
 #endif

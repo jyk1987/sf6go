@@ -17,6 +17,8 @@ import (
 	_ "image/png"
 	"log"
 	"os"
+	"reflect"
+	"unsafe"
 )
 
 // _model_base_path 模型基础路径
@@ -108,6 +110,25 @@ func NewSeetaImageData(width, height, channels int) *SeetaImageData {
 		},
 	}
 	imageData._ptr.data = &imageData.cdata[0]
+	return imageData
+}
+
+func NewSeetaImageDataFromCStruct(cstruct C.struct_SeetaImageData) *SeetaImageData {
+	imageData := &SeetaImageData{
+		_ptr: cstruct,
+	}
+	var clist []C.uchar
+	sliceHeader := (*reflect.SliceHeader)(unsafe.Pointer(&clist))
+	arrayLen := int(imageData.GetWidth() * imageData.GetHeight() * imageData.GetChannels())
+	sliceHeader.Cap = arrayLen
+	sliceHeader.Len = arrayLen
+	sliceHeader.Data = uintptr(unsafe.Pointer(cstruct.data))
+	var cdata []C.uchar = make([]C.uchar, arrayLen)
+	for i := 0; i < arrayLen; i++ {
+		cdata[i] = clist[i]
+	}
+	log.Println(arrayLen)
+	imageData.cdata = cdata
 	return imageData
 }
 
