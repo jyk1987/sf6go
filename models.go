@@ -77,13 +77,45 @@ func (s *SeetaImageData) GetImage() image.Image {
 	height := s.GetHeight()
 	channel := s.GetChannels()
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
+	index := 0
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
-			offset := y*width*channel + x*channel
 			img.SetRGBA(x, y, color.RGBA{
-				B: uint8(s.cdata[offset]),
-				G: uint8(s.cdata[offset+1]),
-				R: uint8(s.cdata[offset+2]),
+				B: uint8(s.cdata[index]),
+				G: uint8(s.cdata[index+1]),
+				R: uint8(s.cdata[index+2]),
+			})
+			index += channel
+		}
+	}
+	return img
+}
+
+func (s *SeetaImageData) CutFace(rect *SeetaRect) image.Image {
+	rx := rect.GetX()
+	ry := rect.GetY()
+	width := rect.GetWidth()
+	height := rect.GetHeight()
+	log.Println(width, ":", height)
+	channel := s.GetChannels()
+	if rx-(height-width)/2 >= 0 {
+		rx = rx - (height-width)/2
+		width = height
+	} else if rx > 0 {
+		width += rx * 2
+		rx = 0
+	}
+	img := image.NewRGBA(image.Rect(0, 0, width, height))
+
+	originalWidth := s.GetWidth()
+
+	for y := 0; y < height; y++ {
+		for x := 0; x < width; x++ {
+			index := (ry+y)*originalWidth*channel + (rx+x)*channel
+			img.SetRGBA(x, y, color.RGBA{
+				B: uint8(s.cdata[index]),
+				G: uint8(s.cdata[index+1]),
+				R: uint8(s.cdata[index+2]),
 			})
 		}
 	}

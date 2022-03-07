@@ -73,7 +73,7 @@ func standard_Test() {
 	if err != nil {
 		log.Panic(err)
 	}
-	for i := 0; i < 2; i++ {
+	for i := 0; i < 1; i++ {
 
 		start := time.Now()
 		begin := start
@@ -124,6 +124,23 @@ func standard_Test() {
 			start = time.Now()
 			status := fas.Predict(imageData, postion, pointInfo)
 			log.Println("活体检测", status, "耗时:", time.Since(start))
+
+			//从原始图像中裁剪出人脸
+			// img := imageData.CutFace(postion) //face.GetImage()
+			// outFile, err := os.Create("temp/" + strconv.Itoa(i) + ".jpeg")
+			// if err != nil {
+			// 	panic(err)
+			// }
+			// b := bufio.NewWriter(outFile)
+			// err = jpeg.Encode(b, img, &jpeg.Options{Quality: 95})
+			// if err != nil {
+			// 	panic(err)
+			// }
+			// err = b.Flush()
+			// if err != nil {
+			// 	panic(err)
+			// }
+			// outFile.Close()
 		}
 		log.Println("单帧总耗时:", time.Since(begin))
 	}
