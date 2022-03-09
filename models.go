@@ -96,7 +96,6 @@ func (s *SeetaImageData) CutFace(rect *SeetaRect) image.Image {
 	ry := rect.GetY()
 	width := rect.GetWidth()
 	height := rect.GetHeight()
-	log.Println(width, ":", height)
 	channel := s.GetChannels()
 	if rx-(height-width)/2 >= 0 {
 		rx = rx - (height-width)/2
