@@ -97,13 +97,15 @@ func (s *SeetaImageData) CutFace(rect *SeetaRect) image.Image {
 	width := rect.GetWidth()
 	height := rect.GetHeight()
 	channel := s.GetChannels()
-	if rx-(height-width)/2 >= 0 {
+
+	if rx-(height-width)/2 >= 0 && (rx+width)+(height-width)/2 <= s.GetWidth() {
 		rx = rx - (height-width)/2
 		width = height
-	} else if rx > 0 {
-		width += rx * 2
-		rx = 0
 	}
+	//  else if rx > 0 {
+	// 	width += rx * 2
+	// 	rx = 0
+	// }
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 
 	originalWidth := s.GetWidth()
