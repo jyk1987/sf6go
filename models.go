@@ -109,10 +109,13 @@ func (s *SeetaImageData) CutFace(rect *SeetaRect) image.Image {
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 
 	originalWidth := s.GetWidth()
-
+	dataLen := len(s.cdata)
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
 			index := (ry+y)*originalWidth*channel + (rx+x)*channel
+			if index >= dataLen {
+				continue
+			}
 			img.SetRGBA(x, y, color.RGBA{
 				B: uint8(s.cdata[index]),
 				G: uint8(s.cdata[index+1]),
