@@ -84,3 +84,7 @@ func (s *FaceTracker) SetThreads(num int) {
 func (s *FaceTracker) SetInterval(interval int) {
 	C.facetracker_SetInterval(s.ptr, C.int(interval))
 }
+
+func (s *FaceTracker) Reset() {
+	C.facetracker_Reset(s.ptr)
+}

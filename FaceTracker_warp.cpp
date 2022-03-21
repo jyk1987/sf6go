@@ -91,7 +91,7 @@ void facetracker_SetInterval(facetracker *ft, int interval)
     cls->SetInterval(interval);
 }
 
-void Reset(facetracker *ft)
+void facetracker_Reset(facetracker *ft)
 {
     seeta::FaceTracker *cls = (seeta::FaceTracker *)ft->cls;
     cls->Reset();
