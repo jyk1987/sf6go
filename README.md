@@ -9,15 +9,22 @@
 ## 使用说明
 
 ### 准备
-
+> 环境要求
+> 
+> `go >= 1.17`
+>```
+> cpu指令集要求:
+> AVX2+FMA 最好性能
+> AVX2 性能略低
+> SSE2 性能最差
+> 如果两SSE2都不支持将无法使用
+> ```
 1. 下载[模型和动态链接库](https://github.com/jyk1987/sf6data)
 2. 配置动态链接库的环境变量，将lib下面相应系统动态连接库文件夹路径配置到"LD_LIBRARY_PATH"中
 ```
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:路径
 ```
-3. `go >= 1.17`
-4. `go get github.com/jyk1987/sf6go`
-5. 最好cpu支持AVX2+FMA，如果不支持FMA会仅启用AVX2，如果两者都不支持会启用SSE2，但如果SSE2都不支持，那就没法用了。
+3. `go get github.com/jyk1987/sf6go`
 
 ### 使用
 
