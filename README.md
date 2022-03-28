@@ -11,20 +11,25 @@
 ### 准备
 > 环境要求
 > 
+> ubuntu 20.04
+> 
 > `go >= 1.17`
->```
-> cpu指令集要求:
-> AVX2+FMA 最好性能
-> AVX2 性能略低
-> SSE2 性能最差
-> 如果两SSE2都不支持将无法使用
-> ```
+> 
+> | CPU指令集 | 性能 |
+> |-----------|------|
+> | AVX2+FMA  | 高   |
+> | AVX2      | 中   |
+> | SSE2      | 低   |
+> 
+> CPU最低要求需要支持SSE2指令集，否则将无法运行
+
 1. 下载[模型和动态链接库](https://github.com/jyk1987/sf6data)
 2. 配置动态链接库的环境变量，将lib下面相应系统动态连接库文件夹路径配置到"LD_LIBRARY_PATH"中
 ```
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:路径
 ```
-3. `go get github.com/jyk1987/sf6go`
+3. `sudo apt update && sudo apt install cmake g++ gcc -y`
+4. `go get github.com/jyk1987/sf6go`
 
 ### 使用
 
