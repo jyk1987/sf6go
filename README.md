@@ -17,6 +17,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:路径
 ```
 3. `go >= 1.17`
 4. `go get github.com/jyk1987/sf6go`
+5. 最好cpu支持AVX2+FMA，如果不支持FMA会仅启用AVX2，如果两者都不支持会启用SSE2，但如果SSE2都不支持，那就没法用了。
 
 ### 使用
 
