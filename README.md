@@ -31,7 +31,7 @@
 > CPU最低要求需要支持SSE2指令集，否则将无法运行
 
 1. 下载[模型和动态链接库](https://github.com/jyk1987/sf6data)
-2. 配置动态链接库的环境变量，将lib下面相应系统动态连接库文件夹路径配置到"LD_LIBRARY_PATH"中
+2. 配置动态链接库的环境变量，将lib下面相应系统动态连接库文件夹路径配置到"LD_LIBRARY_PATH"和"CGO_LDFLAGS"中
 ```
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:路径
 export CGO_LDFLAGS="-L路径"
