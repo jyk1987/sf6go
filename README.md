@@ -6,12 +6,19 @@
 
 > 目前仅在ubuntu20.04系统上编译了seetaface6，windows平台的dll还要等一等
 
-## 使用说明
+## 更新记录
 
-### 准备
+#### 2022-03-29 1.3.0
+> 修改代码中对动态链接库的引用方式，完全使用环境变量读取路径
+> 
+> 开发环境需要同时设置CGO_LDFLAGS和LD_LIBRARY_PATH两个系统变量
+> 
+> 部署环境只需要设置LD_LIBRARY_PATH系统变量
+
+## 准备
 > 环境要求
 > 
-> ubuntu 20.04
+> ubuntu 20.04\ubuntu 18.04
 > 
 > `go >= 1.17`
 > 
@@ -27,11 +34,15 @@
 2. 配置动态链接库的环境变量，将lib下面相应系统动态连接库文件夹路径配置到"LD_LIBRARY_PATH"中
 ```
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:路径
+export CGO_LDFLAGS="-L路径"
 ```
+> **注意:** 开发时需要CGO_LDFLAGS和LD_LIBRARY_PATH变量都存在
+> 
+> 生产环境中只需要LD_LIBRARY_PATH变量
 3. `sudo apt update && sudo apt install cmake g++ gcc -y`
 4. `go get github.com/jyk1987/sf6go`
 
-### 使用
+## 使用说明
 
 #### 加载模型
 
