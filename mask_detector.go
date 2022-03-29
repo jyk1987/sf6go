@@ -1,7 +1,7 @@
 package sf6go
 
 // #cgo CXXFLAGS: -std=c++1z -Wall -O3 -DNDEBUG -march=native
-// #cgo LDFLAGS: -L${SRCDIR}/lib -lSeetaMaskDetector200
+// #cgo LDFLAGS: -lSeetaMaskDetector200
 // #include <stdlib.h>
 // #include "MaskDetector_warp.h"
 import "C"

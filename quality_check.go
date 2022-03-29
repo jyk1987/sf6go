@@ -1,7 +1,7 @@
 package sf6go
 
 // #cgo CXXFLAGS: -std=c++1z -Wall -O3 -DNDEBUG -march=native
-// #cgo LDFLAGS: -L${SRCDIR}/lib -ltennis -lSeetaAuthorize -lSeetaQualityAssessor300 -lSeetaPoseEstimation600
+// #cgo LDFLAGS: -ltennis -lSeetaAuthorize -lSeetaQualityAssessor300 -lSeetaPoseEstimation600
 // #include <stdlib.h>
 // #include "CStruct.h"
 // #include "QualityCheck_warp.h"

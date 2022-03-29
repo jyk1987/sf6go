@@ -94,6 +94,10 @@ fabric.properties
 # *.so
 *.dylib
 
+cmd/main
+cmd/main.exe
+cmd/main.exe~
+
 # Test binary, built with `go test -c`
 *.test
 
