@@ -1,7 +1,7 @@
 package sf6go
 
 // #cgo CXXFLAGS: -std=c++1z -Wall -O3 -DNDEBUG -march=native
-// #cgo LDFLAGS: -L${SRCDIR}/lib -lSeetaFaceAntiSpoofingX600
+// #cgo LDFLAGS: -lSeetaFaceAntiSpoofingX600
 // #include <stdlib.h>
 // #include "FaceAntiSpoofing_warp.h"
 import "C"

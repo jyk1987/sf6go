@@ -1,7 +1,7 @@
 package sf6go
 
 // #cgo CXXFLAGS: -std=c++1z -Wall -O3 -DNDEBUG -march=native
-// #cgo LDFLAGS: -L${SRCDIR}/lib -lSeetaFaceRecognizer610
+// #cgo LDFLAGS: -lSeetaFaceRecognizer610
 // #include <stdlib.h>
 // #include "FaceRecognizer_warp.h"
 import "C"
